@@ -1,0 +1,15 @@
+# Xcode
+.DS_Store
+.idea/
+*.swp
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+*.hmap
+*.xccheckout
+.xccurrentversion
+*.moved-aside
+*.xcworkspace
+Pods/
+
