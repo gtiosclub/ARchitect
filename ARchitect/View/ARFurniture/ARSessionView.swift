@@ -15,7 +15,7 @@ struct ARSessionView: View, UIViewRepresentable {
          let anchor = AnchorEntity(plane: .horizontal)
          anchor.addChild(box)
          arView.scene.anchors.append(anchor)
-         
+        
          box.components.set(InputTargetComponent())
          
          let panGestureRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(_:)))

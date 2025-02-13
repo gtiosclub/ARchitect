@@ -29,9 +29,32 @@
 		7F5A3D852D52A677007BB24F /* ARchitectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARchitectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6BD3C0042D5E855500FEE538 /* Exceptions for "ARchitect" folder in "ARchitectTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GreyCouch.usdz,
+				"modern chair.usdz",
+			);
+			target = 7F5A3D7A2D52A677007BB24F /* ARchitectTests */;
+		};
+		6BD3C0052D5E855500FEE538 /* Exceptions for "ARchitect" folder in "ARchitectUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GreyCouch.usdz,
+				"modern chair.usdz",
+			);
+			target = 7F5A3D842D52A677007BB24F /* ARchitectUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7F5A3D6D2D52A675007BB24F /* ARchitect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6BD3C0042D5E855500FEE538 /* Exceptions for "ARchitect" folder in "ARchitectTests" target */,
+				6BD3C0052D5E855500FEE538 /* Exceptions for "ARchitect" folder in "ARchitectUITests" target */,
+			);
 			path = ARchitect;
 			sourceTree = "<group>";
 		};
