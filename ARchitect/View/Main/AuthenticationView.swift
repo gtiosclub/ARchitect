@@ -14,30 +14,42 @@ struct AuthenticationView: View {
     
     var body: some View {
         VStack {
-            Text("AR").font(.largeTitle).fontWeight(.bold)
-            + Text("chitect").font(.largeTitle).fontWeight(.thin)
+            Text("AR").font(.custom("SF Pro", size: 40))
+            + Text("chitect").font(.largeTitle).fontWeight(.ultraLight)
             
-            TextField("Username/Email", text: $name)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-            
-            SecureField("Password", text: $password)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
+//            TextField("Username/Email", text: $name)
+//                            .textFieldStyle(RoundedBorderTextFieldStyle())
+//                            .padding()
+//            
+//            SecureField("Password", text: $password)
+//                            .textFieldStyle(RoundedBorderTextFieldStyle())
+//                            .padding()
             
             Button(action: {
-                isAuthenticated = true
+                
             }) {
                 Text("Login")
                     .font(.headline)
                     .foregroundColor(.black)
                     .padding()
-                    .frame(width: 200, height: 50) // Adjust size to create an oval shape
+                    .frame(width: 346, height: 46)
                     .background(Color.white) // Button background color
-                    .clipShape(Capsule()) // Makes it an oval
+                    .cornerRadius(15)
                     .overlay(
-                        Capsule().stroke(Color.black, lineWidth: 2) // Black outline
+                        RoundedRectangle(cornerRadius: 15).stroke(Color.black, lineWidth: 2) // Black outline
                     )
+            }
+            
+            Button(action: {
+                
+            }) {
+                Text("Sign Up")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 350, height: 50) // Adjust size to create an oval shape
+                    .background(Color.black) // Button background color
+                    .cornerRadius(15)
             }
         }
         
