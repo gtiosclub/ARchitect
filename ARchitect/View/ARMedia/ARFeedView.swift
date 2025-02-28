@@ -10,6 +10,7 @@ import SwiftUI
 struct ARFeedView: View {
     var body: some View {
         Text("FeedView Placeholder")
+        ContentView()
     }
 }
 
