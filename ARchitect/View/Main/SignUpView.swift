@@ -13,16 +13,16 @@ struct SignUpView: View {
 	@State private var email: String = ""
 	var body: some View {
 		VStack(alignment: .leading) {
-			Spacer()
+			Spacer().frame(height: 50)
 			HStack {
 				Text("Create a New Account").font(.system(size:30, weight: .bold, design: .monospaced))
 					.padding(.leading)
-				Spacer().frame(width: 100)
+				Spacer().frame(width: 30)
 			}
 			Spacer().frame(height: 50)
 			VStack(alignment: .leading) {
 				Text("Username")
-					.font(.body)
+					.font(.system(size:20, design: .monospaced))
 					.foregroundColor(.black)
 				
 				TextField("", text: $username)
@@ -33,7 +33,7 @@ struct SignUpView: View {
 			.padding()
 			VStack(alignment: .leading) {
 				Text("Email")
-					.font(.body)
+					.font(.system(size:20, design: .monospaced))
 					.foregroundColor(.black)
 				
 				TextField("", text: $email)
@@ -44,7 +44,7 @@ struct SignUpView: View {
 			.padding()
 			VStack(alignment: .leading) {
 				Text("Password")
-					.font(.body)
+					.font(.system(size:20, design: .monospaced))
 					.foregroundColor(.black)
 				
 				TextField("", text: $password)
@@ -60,7 +60,7 @@ struct SignUpView: View {
 					print("Welcome \(username), your password is \(password), your email is \(email)")
 				}) {
 					Text("Sign Up")
-						.font(.system(size: 25, weight: .medium))
+						.font(.system(size:20, design: .monospaced))
 						.foregroundColor(.black)
 						.padding()
 						.frame(width: 346, height: 46)

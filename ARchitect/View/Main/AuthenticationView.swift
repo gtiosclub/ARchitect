@@ -16,6 +16,7 @@ struct AuthenticationView: View {
 							.fill(rectangleColor)
 							.frame(width: 100, height: 100)
 							.animation(.easeInOut(duration: 2), value: rectangleColor)
+							.cornerRadius(20)
 						Text("AR")
 							.font(.system(size: 75, design: .rounded))
 							.foregroundColor(textColor)

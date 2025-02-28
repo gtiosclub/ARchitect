@@ -12,16 +12,16 @@ struct LoginView: View {
 	@State private var password: String = ""
     var body: some View {
 		VStack(alignment: .leading) {
-			Spacer()
+			Spacer().frame(height: 100)
 			HStack {
-				Text("Login").font(.system(size:40, weight: .bold, design: .rounded))
+				Text("Login").font(.system(size:40, weight: .bold, design: .monospaced))
 					.padding(.leading)
 				Spacer().frame(width: 200)
 			}
-			Spacer().frame(height: 150)
+			Spacer().frame(height: 100)
 			VStack(alignment: .leading) {
 				Text("Username")
-					.font(.body)
+					.font(.system(size:20, design: .monospaced))
 					.foregroundColor(.black)
 				
 				TextField("", text: $username)
@@ -32,7 +32,7 @@ struct LoginView: View {
 			.padding()
 			VStack(alignment: .leading) {
 				Text("Password")
-					.font(.body)
+					.font(.system(size:20, design: .monospaced))
 					.foregroundColor(.black)
 				
 				TextField("", text: $password)
@@ -47,9 +47,11 @@ struct LoginView: View {
 					
 				}) {
 					Text("Forgot Password?").font(.system(size:20, weight: .light))
+						.foregroundColor(.gray)
 				}
 			}
 			.padding(.vertical)
+			Spacer().frame(height: 70)
 			HStack {
 				Spacer()
 				Button(action: {
@@ -59,8 +61,8 @@ struct LoginView: View {
 						.font(.system(size: 20, design: .monospaced))
 						.foregroundColor(.white)
 						.padding()
-						.frame(width: 350, height: 50) // Adjust size to create an oval shape
-						.background(Color.black) // Button background color
+						.frame(width: 350, height: 50)
+						.background(Color.black)
 						.cornerRadius(15)
 				}
 				Spacer()
