@@ -2,7 +2,14 @@
 //  Comment.swift
 //  ARchitect
 //
-//  Created by Dhairya Patel on 2/27/25.
+//  Created by Dhairya Patel on 2/20/25.
 //
 
 import Foundation
+
+struct Comment: Identifiable {
+    let id = UUID()
+    let text: String
+    let timestamp: Date
+    let publisher: String
+}
