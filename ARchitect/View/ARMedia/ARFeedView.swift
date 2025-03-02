@@ -8,11 +8,47 @@
 import SwiftUI
 
 struct ARFeedView: View {
+    @StateObject var sheetManager = SheetManager()
+    //    @State private var showingAlert = false
     var body: some View {
-        Text("FeedView Placeholder")
+        ZStack{
+            Color
+                .white
+                .ignoresSafeArea()
+            Rectangle()
+                .fill(Color.blue)
+                .frame(maxWidth: .infinity)
+                .frame(height: 300)
+                .overlay(
+                    Text("Tap here")
+                        .foregroundColor(.white)
+                        .font(.headline)
+                )
+                .gesture(
+                    TapGesture()
+                        .onEnded {
+                            withAnimation {
+                                sheetManager.present()
+                            }
+                        }
+                )
+        }
+        .overlay(alignment: .center){
+            if sheetManager.isPresented {
+                InformationPopUpView{
+                    withAnimation{
+                        sheetManager.dismiss()
+                    }
+                }
+            }
+        }
+        .ignoresSafeArea()
+        
     }
 }
 
 #Preview {
     ARFeedView()
+        .environmentObject(SheetManager())
+
 }
