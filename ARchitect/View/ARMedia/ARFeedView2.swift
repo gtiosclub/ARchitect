@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ARFeedView: View {
+struct ARFeedView2: View {
     @State var posts: [Post] = []
     var body: some View {
         NavigationView {
@@ -33,7 +33,7 @@ struct ARFeedView: View {
 }
 
 #Preview {
-    ARFeedView(posts:
+    ARFeedView2(posts:
         [
             Post(
                 username: "username",
