@@ -13,6 +13,12 @@ struct FurnitureLibraryView: View {
         VStack {
            Text("Furniture Library")
                 .fixedSize()
+            //let url = URL(fileURLWithPath: "GreyCouch.usdz")
+            //let entity = try? Entity.load(contentsOf: url)
+            Image("GreyCouch2D")
+                .resizable()
+                .scaledToFit()
+
         }
     }
 }
