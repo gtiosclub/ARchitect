@@ -72,6 +72,8 @@ struct FurniturePageView: View {
 enum FurnitureCategories: String, CaseIterable {
     case table = "Table"
     case wardrobe = "Wardrobe"
+    case chair = "Chair"
+    case couch = "Couch"
 }
 
 extension FurnitureItem {
@@ -81,6 +83,10 @@ extension FurnitureItem {
             return SampleFurniture.table
         case .wardrobe:
             return SampleFurniture.wardobe
+        case .chair:
+            return SampleFurniture.chair
+        case .couch:
+            return SampleFurniture.couch
         }
     }
 }
