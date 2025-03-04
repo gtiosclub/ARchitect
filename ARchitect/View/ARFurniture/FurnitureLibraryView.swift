@@ -26,31 +26,6 @@ struct FurnitureLibraryView: View {
     
     var body: some View {
         VStack {
-            // Header and Search Bar
-            HStack {
-                Text("Home")
-                    .font(.largeTitle).bold()
-                Spacer()
-                Image(systemName: "magnifyingglass")
-                    .font(.title2)
-            }
-            .padding(.horizontal)
-            
-            // Segmented Control
-            HStack {
-                ForEach(categories, id: \.self) { category in
-                    Button(action: { selectedCategory = category }) {
-                        Text(category)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(selectedCategory == category ? Color.green.opacity(0.8) : Color.gray.opacity(0.2))
-                            .clipShape(Capsule())
-                            .foregroundColor(selectedCategory == category ? .white : .black)
-                    }
-                }
-            }
-            .padding(.horizontal)
-            
             // Recent Items
             Text("Recent")
                 .font(.headline)
