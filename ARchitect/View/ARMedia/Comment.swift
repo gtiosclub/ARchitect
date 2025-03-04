@@ -9,6 +9,8 @@ import Foundation
 
 struct Comment: Identifiable {
     let id = UUID()
+    let username: String = "username"
+    let userImage: String = "person.circle.fill"
     let text: String
     let timestamp: Date
     let publisher: String

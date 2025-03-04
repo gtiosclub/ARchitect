@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PostView: View {
     @State var post: Post
+    @State private var showComments = false
 
     var body: some View {
         NavigationView {
@@ -90,9 +91,15 @@ struct PostView: View {
                 
                 // Comment Box & Like Button
                 HStack {
-                    TextField("Comment something...", text: .constant(""))
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(height: 40)
+                    
+                    Button("Comment something...") {
+                        showComments.toggle()
+                    }
+                    .foregroundColor(Color.gray)
+                    .frame(height: 40)
+                    .buttonStyle(.bordered)
+                    
+                    Spacer()
                     
                     Button(action: {
                         post.user_liked.toggle()
@@ -104,6 +111,11 @@ struct PostView: View {
                     }
                 }
                 .padding(.horizontal)
+                .sheet(isPresented: $showComments) {
+                    // iOS 16+ allows us to specify detents for medium, large, etc.
+                    CommentSectionView()
+                        .presentationDetents([.medium, .large])
+                }
             }
             .padding()
         }
