@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostView: View {
-    let post: Post
+    @State var post: Post
 
     var body: some View {
         NavigationView {
@@ -95,9 +95,10 @@ struct PostView: View {
                         .frame(height: 40)
                     
                     Button(action: {
-                        print("Liked post")
+                        post.user_liked.toggle()
+                        post.likes += post.user_liked ? 1 : -1
                     }) {
-                        Image(systemName: "heart.fill")
+                        Image(systemName: post.user_liked ? "heart.fill" : "heart")
                             .font(.title)
                             .foregroundColor(.red)
                     }
