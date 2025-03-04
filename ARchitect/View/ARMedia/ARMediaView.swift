@@ -1,5 +1,5 @@
 //
-//  ARFeedView.swift
+//  ARMediaView.swift
 //  ARchitect
 //
 //  Created by Songyuan Liu on 2/4/25.
@@ -17,8 +17,7 @@ struct ARMediaView: View {
             tags: ["vintage", "retro", "vibe"],
             description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
             timeAgo: "4 days ago",
-            likes: 120,
-            comments: 90),
+            likes: 120),
         Post(
             username: "Bob",
             userImage: "person.circle.fill", // SF Symbol for user avatar
@@ -27,8 +26,7 @@ struct ARMediaView: View {
             tags: ["vintage", "retro"],
             description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
             timeAgo: "10 days ago",
-            likes: 100,
-            comments: 90),
+            likes: 100),
     ]
     var body: some View {
         NavigationView {
@@ -54,30 +52,7 @@ struct ARMediaView: View {
 }
 
 #Preview {
-    ARMediaView(posts:
-        [
-            Post(
-                username: "username",
-                userImage: "person.circle.fill", // SF Symbol for user avatar
-                title: "1990 Vintage",
-                imageName: "ar_room1", // Replace with actual asset name
-                tags: ["vintage", "retro", "vibe"],
-                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-                timeAgo: "4 days ago",
-                likes: 120,
-                comments: 90),
-            Post(
-                username: "Bob",
-                userImage: "person.circle.fill", // SF Symbol for user avatar
-                title: "Virtual Office",
-                imageName: "ar_room2", // Replace with actual asset name
-                tags: ["vintage", "retro"],
-                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-                timeAgo: "10 days ago",
-                likes: 100,
-                comments: 90),
-        ]
-    )
+    ARMediaView()
 }
 
 struct SubARView: View {
@@ -139,7 +114,7 @@ struct SubARView: View {
                 Button(action: {}) {
                     HStack {
                         Image(systemName: "ellipsis.message")
-                        Text("\(post.comments)+")
+                        Text("\(post.comments.count)+")
                     }
                 }
                 

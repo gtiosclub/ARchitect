@@ -18,5 +18,16 @@ struct Post: Identifiable {
     let timeAgo: String
     var likes: Int
     var user_liked: Bool = false
-    var comments: Int
+    var comments: [Comment] = [Comment(username: "Sam", timeAgo: "3 days ago", likes: 10, comment: "This is a great post and I am so happy with it")]
+    
+    struct Comment: Identifiable {
+        let id = UUID()
+        let username: String
+        let userImage: String = "person.circle.fill"
+        let timeAgo: String
+        var likes: Int
+        var user_liked: Bool = false
+        var comment: String
+    }
 }
+

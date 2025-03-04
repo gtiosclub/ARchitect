@@ -120,7 +120,6 @@ struct PostView: View {
             tags: ["vintage", "retro", "vibe"],
             description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
             timeAgo: "4 days ago",
-            likes: 120,
-            comments: 100)
+            likes: 120)
          )
 }
