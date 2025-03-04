@@ -12,4 +12,6 @@ struct Comment: Identifiable {
     let text: String
     let timestamp: Date
     let publisher: String
+    var likes: Int
+    var isLiked: Bool = false
 }
