@@ -11,7 +11,7 @@ struct SampleFurniture {
     ]
     
     static let wardobe: [FurnitureItem] = [
-        FurnitureItem(name: "Wood Wardrobe", imageName: "Wardrobe", isLocked: false)
+        FurnitureItem(name: "Wood Wardrobe", imageName: "Wardrobe", isLocked: false),
         FurnitureItem(name: "Blue Wardrobe", imageName: "blueWardrobe", isLocked: false)
     ]
 
@@ -20,8 +20,8 @@ struct SampleFurniture {
     ]
 
     static let couch: [FurnitureItem] = [
-        FurnitureItem(name: "Grey Couch", imageName: "GreyCouch2D", isLocked: false)
-        FurnitureItem(name: "Long Grey Couch", imageName: "longGreyCouch", isLocked: false)
+        FurnitureItem(name: "Grey Couch", imageName: "GreyCouch2D", isLocked: false),
+        FurnitureItem(name: "Long Grey Couch", imageName: "longGreyCouch", isLocked: false),
         FurnitureItem(name: "Green Sofa", imageName: "greenSofa", isLocked: false)
     ]
     
