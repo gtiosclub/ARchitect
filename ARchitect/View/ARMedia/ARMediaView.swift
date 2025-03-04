@@ -7,8 +7,29 @@
 
 import SwiftUI
 
-struct ARFeedView2: View {
-    @State var posts: [Post] = []
+struct ARMediaView: View {
+    @State var posts: [Post] = [
+        Post(
+            username: "username",
+            userImage: "person.circle.fill", // SF Symbol for user avatar
+            title: "1990 Vintage",
+            imageName: "ar_room1", // Replace with actual asset name
+            tags: ["vintage", "retro", "vibe"],
+            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+            timeAgo: "4 days ago",
+            likes: 120,
+            comments: 90),
+        Post(
+            username: "Bob",
+            userImage: "person.circle.fill", // SF Symbol for user avatar
+            title: "Virtual Office",
+            imageName: "ar_room2", // Replace with actual asset name
+            tags: ["vintage", "retro"],
+            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+            timeAgo: "10 days ago",
+            likes: 100,
+            comments: 90),
+    ]
     var body: some View {
         NavigationView {
             VStack {
@@ -33,7 +54,7 @@ struct ARFeedView2: View {
 }
 
 #Preview {
-    ARFeedView2(posts:
+    ARMediaView(posts:
         [
             Post(
                 username: "username",
