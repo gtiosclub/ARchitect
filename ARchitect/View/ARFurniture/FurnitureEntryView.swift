@@ -10,7 +10,7 @@ import SwiftUI
 struct FurnitureEntryView: View {
     var body: some View {
         NavigationStack {
-            Text("FurnitureEntryView Placeholder")
+            FurnitureLibraryView()
                 .toolbar {
                     NavigationLink {
                         ARSessionView()
