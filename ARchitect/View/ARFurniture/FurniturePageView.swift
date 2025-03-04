@@ -90,25 +90,25 @@ struct FurnitureCardView: View {
     
     var body: some View {
         VStack {
-            let imageDir = Bundle.main.resourcePath! + "/FurnitureImages/"
-            let fileList = try? FileManager.default.contentsOfDirectory(atPath: imageDir)
-
-            Text("Available files: \(fileList?.joined(separator: ", ") ?? "None")")
-                .foregroundColor(.gray)
-
-            if let imagePath = Bundle.main.path(forResource: furniture.imageName, ofType: "png", inDirectory: "FurnitureImages"),
-               let uiImage = UIImage(contentsOfFile: imagePath) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .cornerRadius(10)
-            } else {
-                Text("Image not found: \(furniture.imageName).png")
-                    .foregroundColor(.red)
+            Image(furniture.imageName) // Use image name directly
+                .resizable()
+                .scaledToFit()
+                .cornerRadius(10)
+            
+            HStack {
+                Text(furniture.name)
+                    .font(.headline)
+                Spacer()
             }
+            .padding(.horizontal)
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 4)
     }
 }
+
 
 
 
