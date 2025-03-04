@@ -113,7 +113,7 @@ struct PostView: View {
                 .padding(.horizontal)
                 .sheet(isPresented: $showComments) {
                     // iOS 16+ allows us to specify detents for medium, large, etc.
-                    CommentSectionView()
+                    CommentSectionView(viewModel: post.commentsModel)
                         .presentationDetents([.medium, .large])
                 }
             }

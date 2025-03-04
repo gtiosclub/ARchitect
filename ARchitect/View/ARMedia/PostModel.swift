@@ -18,6 +18,6 @@ struct Post: Identifiable {
     let timeAgo: String
     var likes: Int
     var user_liked: Bool = false
-    var comments: [Comment] = [Comment(text: "This is a great post and I am so happy with it", timestamp: Date(), publisher: "Sam", likes: 10)]
+    var commentsModel: CommentViewModel = CommentViewModel()
 }
 

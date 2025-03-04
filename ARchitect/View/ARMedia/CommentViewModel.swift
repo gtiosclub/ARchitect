@@ -30,6 +30,10 @@ class CommentViewModel: ObservableObject {
             }
         }
     }
+    
+    func length() -> Int {
+        return comments.count
+    }
 }
 //class CommentViewModel: ObservableObject {
 //    @Published var comments: [Comment] = [

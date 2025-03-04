@@ -114,7 +114,7 @@ struct SubARView: View {
                 Button(action: {}) {
                     HStack {
                         Image(systemName: "ellipsis.message")
-                        Text("\(post.comments.count)+")
+                        Text("\(post.commentsModel.length())+")
                     }
                 }
                 

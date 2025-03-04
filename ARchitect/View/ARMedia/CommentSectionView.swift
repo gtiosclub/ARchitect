@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CommentSectionView: View {
-    @StateObject private var viewModel = CommentViewModel()
+    @StateObject var viewModel: CommentViewModel
     @State private var newCommentText = ""
     
     var body: some View {
@@ -74,5 +74,5 @@ struct CommentSectionView: View {
 }
 
 #Preview {
-    CommentSectionView()
+    CommentSectionView(viewModel: CommentViewModel())
 }
