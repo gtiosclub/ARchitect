@@ -1,15 +1,9 @@
-//
-//  MainView.swift
-//  ARchitect
-//
-//  Created by Songyuan Liu on 2/4/25.
-//
 
 import SwiftUI
 
 struct MainView: View {
     @State private var isAuthenticated: Bool = false
-    
+    @State private var showProjectPage: Bool = false
     
     var body: some View {
         tabController
@@ -19,6 +13,24 @@ struct MainView: View {
                 AuthenticationView(isAuthenticated: $isAuthenticated)
                     .interactiveDismissDisabled(true)
             }
+        VStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        showProjectPage = true
+                    }) {
+                        Text("Go to Projects")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                    }
+                    .padding()
+                    .fullScreenCover(isPresented: $showProjectPage) {
+                        FurniturePageView()
+                    }
+                }
     }
     
     var tabController: some View {
@@ -34,6 +46,9 @@ struct MainView: View {
     }
 }
 
-#Preview {
-    MainView()
+struct MainView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainView()
+    }
 }
+
