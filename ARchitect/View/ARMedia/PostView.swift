@@ -12,7 +12,7 @@ struct PostView: View {
     @State private var showComments = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading) {
                 // User Info and Options
                 HStack {

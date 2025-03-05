@@ -29,7 +29,7 @@ struct ARMediaView: View {
             likes: 100),
     ]
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Text("ARchitect")
                     .font(.largeTitle)
