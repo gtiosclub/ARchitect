@@ -4,63 +4,100 @@ import ARKit
 
 struct ARSessionView: View {
     @State private var arView = ARView(frame: .zero)
-    @State private var addCubeTrigger = false
+    @State private var selectedColor: UIColor? = nil
+    @State private var showMenu = false
+
+    let colors: [(name: String, color: UIColor)] = [
+        ("Gray", .gray),
+        ("Red", .red),
+        ("Green", .green),
+        ("Blue", .blue),
+        ("Yellow", .yellow)
+    ]
     
     var body: some View {
         ZStack {
-            ARViewContainer(arView: $arView,
-                            addCubeTrigger: $addCubeTrigger)
+            ARViewContainer(arView: $arView, selectedColor: $selectedColor)
                 .edgesIgnoringSafeArea(.all)
-            
-            VStack {
-                Spacer()
-                Button {
-                    addCubeTrigger = true
-                } label: {
-                    Text("Add Cube")
+            if showMenu {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Select Cube Color:")
                         .font(.headline)
-                        .padding()
-                        .background(Color.green)
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .padding(.top, 10)
+                    
+                    ForEach(colors, id: \.name) { color in
+                        Button(action: {
+                            selectedColor = color.color
+                        }) {
+                            HStack {
+                                Rectangle()
+                                    .fill(Color(color.color))
+                                    .frame(width: 40, height: 40)
+                                    .cornerRadius(8)
+                                Text(color.name)
+                                    .foregroundColor(.white)
+                                    .font(.body)
+                            }
+                            .padding(10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.black.opacity(0.5))
+                            .cornerRadius(10)
+                        }
+                    }
+                    Spacer()
                 }
-                .padding(.bottom, 50)
+                .frame(width: 200)
+                .background(Color.black.opacity(0.8))
+                .cornerRadius(15)
+                .padding()
+                .transition(.move(edge: .leading))
             }
+            
+            Button(action: {
+                withAnimation {
+                    showMenu.toggle()
+                }
+            }) {
+                Image(systemName: "line.horizontal.3")
+                    .padding()
+                    .background(Color.white.opacity(0.8))
+                    .cornerRadius(8)
+            }
+            .position(x: 30, y: 50)
         }
     }
 }
 
 struct ARViewContainer: UIViewRepresentable {
     @Binding var arView: ARView
-    @Binding var addCubeTrigger: Bool
+    @Binding var selectedColor: UIColor?
     
     func makeUIView(context: Context) -> ARView {
-        let arConfiguration = ARWorldTrackingConfiguration()
-        arConfiguration.planeDetection = [.horizontal]
-        arView.session.run(arConfiguration)
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal]
+        arView.session.run(configuration)
         
-        // Create a horizontal anchor for the scene.
         let anchor = AnchorEntity(plane: .horizontal)
         arView.scene.anchors.append(anchor)
         context.coordinator.arView = arView
         context.coordinator.anchor = anchor
-        
-        // Add the first cube.
-        context.coordinator.addCube()
+        context.coordinator.addCube(with: .gray)
         
         return arView
     }
     
     func updateUIView(_ uiView: ARView, context: Context) {
-        // When triggered, add a new cube.
-        if addCubeTrigger {
-            context.coordinator.addCube()
-            addCubeTrigger = false
+        if let color = selectedColor {
+            context.coordinator.addCube(with: color)
+            DispatchQueue.main.async {
+                self.selectedColor = nil
+            }
         }
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
+        Coordinator(self)
     }
     
     class Coordinator: NSObject {
@@ -73,37 +110,32 @@ struct ARViewContainer: UIViewRepresentable {
             self.parent = parent
         }
         
-        /// Adds a new cube (with its own info box) to the scene and installs built-in gestures.
-        func addCube() {
+        func addCube(with color: UIColor) {
             guard let anchor = anchor, let arView = arView else { return }
             
-            // Offset each cube slightly to avoid overlap.
             let offset: Float = Float(cubeCount) * 0.15
-            let newCube = ModelEntity(mesh: .generateBox(size: 0.1),
-                                      materials: [SimpleMaterial(color: .gray, isMetallic: true)])
-            newCube.name = "Cube \(cubeCount + 1)"
-            newCube.position = [offset, 0.05, 0]
-            newCube.generateCollisionShapes(recursive: true)
+            let cube = ModelEntity(
+                mesh: .generateBox(size: 0.1),
+                materials: [SimpleMaterial(color: color, isMetallic: false)]
+            )
+            cube.name = "Cube \(cubeCount + 1)"
+            cube.position = [offset, 0.05, 0]
+            cube.generateCollisionShapes(recursive: true)
             
-            // Create and attach the info box.
-            let infoBox = ARViewContainer.createInfoBox()
+            let infoBox = ARViewContainer.createInfoBox(color: color)
             infoBox.position = SIMD3<Float>(0, 0.1, 0)
-            newCube.addChild(infoBox)
+            cube.addChild(infoBox)
             
-            // Add the cube to the anchor.
-            anchor.addChild(newCube)
-            
-            // Install built-in gestures for translation, rotation, and scaling.
-            arView.installGestures([.translation, .rotation, .scale], for: newCube)
+            anchor.addChild(cube)
+            arView.installGestures([.translation, .rotation, .scale], for: cube)
             
             cubeCount += 1
         }
     }
     
-    /// Helper method to create an info box for a cube.
-    static func createInfoBox() -> Entity {
+    static func createInfoBox(color: UIColor) -> Entity {
         let textMesh = MeshResource.generateText(
-            "Cube Info\nColor: Gray\nSize: 0.10m",
+            "Cube Info\nColor: \(color.accessibilityName)\nSize: 0.10m",
             extrusionDepth: 0.01,
             font: .systemFont(ofSize: 0.03),
             containerFrame: .zero,
