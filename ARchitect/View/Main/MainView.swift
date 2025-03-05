@@ -28,7 +28,7 @@ struct MainView: View {
             }
             
             Tab("AR Feed", systemImage: "figure.socialdance.circle") {
-                ARFeedView()
+                ARMediaView()
             }
         }
     }
