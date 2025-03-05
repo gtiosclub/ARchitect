@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        FirebaseApp.configure()
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = MainView()
+        let contentView = MainView().environment(SheetManager())
 
         // Use a UIHostingController as window root view controller.
         let window = UIWindow(frame: UIScreen.main.bounds)

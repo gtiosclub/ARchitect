@@ -7,13 +7,14 @@
 
 import Foundation
 
+@Observable
 final class SheetManager: ObservableObject{
     enum Action{
         case na
         case present
         case dismiss
     }
-    @Published private(set) var action: Action = .na
+    private(set) var action: Action = .na
     
     func present(){
         guard action != .present else { return } //to ensure we don't have multiple pop ups
@@ -26,3 +27,4 @@ final class SheetManager: ObservableObject{
     
     var isPresented: Bool { self.action == .present }
 }
+

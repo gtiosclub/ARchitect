@@ -2,75 +2,135 @@ import SwiftUI
 import RealityKit
 import ARKit
 
-struct ARSessionView: View, UIViewRepresentable {
-    func makeUIView(context: Context) -> ARView {
-         let arView = ARView(frame: .zero)
-         let config = ARWorldTrackingConfiguration()
-         config.planeDetection = [.horizontal]
-         arView.session.run(config)
-         
-         let box = ModelEntity(mesh: .generateBox(size: 0.3), materials: [SimpleMaterial(color: .blue, isMetallic: false)])
-         box.generateCollisionShapes(recursive: true)
-         
-         let anchor = AnchorEntity(plane: .horizontal)
-         anchor.addChild(box)
-         arView.scene.anchors.append(anchor)
-        
-         box.components.set(InputTargetComponent())
-         
-         let panGestureRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(_:)))
-         arView.addGestureRecognizer(panGestureRecognizer)
-        
-        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePinch(_:)))
-        arView.addGestureRecognizer(pinchGestureRecognizer)
-         
-        
-        context.coordinator.arView = arView
-        context.coordinator.selectedEntity = box
-         
-        return arView
-     }
-     
-     func updateUIView(_ uiView: ARView, context: Context) {}
-     
-     func makeCoordinator() -> Coordinator {
-         Coordinator()
-     }
-     
-     class Coordinator: NSObject {
-         weak var arView: ARView?
-         var selectedEntity: ModelEntity?
-         var lastWorldPosition: SIMD3<Float>?
-         
-         @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-             guard let arView = arView, let entity = selectedEntity else { return }
-             
-             let touchLocation = gesture.location(in: arView)
-             let hitTestResults = arView.raycast(from: touchLocation, allowing: .estimatedPlane, alignment: .horizontal)
-             
-             if let firstResult = hitTestResults.first {
-                 let worldPosition = SIMD3<Float>(firstResult.worldTransform.columns.3.x, firstResult.worldTransform.columns.3.y, firstResult.worldTransform.columns.3.z)
-                 
-                 if gesture.state == .began {
-                     lastWorldPosition = worldPosition
-                 } else if gesture.state == .changed, let lastPosition = lastWorldPosition {
-                     let translation = worldPosition - lastPosition
-                     entity.position += translation
-                     lastWorldPosition = worldPosition
-                 }
-             }
-         }
-         
-         @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
-             guard let entity = selectedEntity else { return }
-             
-             let scale = Float(gesture.scale)
-             entity.scale = SIMD3<Float>(repeating: scale)
-                         
-             if gesture.state == .ended {
-                 gesture.scale = 1.0
-             }
-         }
-     }
- }
+struct ARSessionView: View {
+    @State private var arView = ARView(frame: .zero)
+    @State private var addCubeTrigger = false
+    
+    var body: some View {
+        ZStack {
+            ARViewContainer(arView: $arView,
+                            addCubeTrigger: $addCubeTrigger)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack {
+                Spacer()
+                Button {
+                    addCubeTrigger = true
+                } label: {
+                    Text("Add Cube")
+                        .font(.headline)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.bottom, 50)
+            }
+        }
+    }
+}
 
+struct ARViewContainer: UIViewRepresentable {
+    @Binding var arView: ARView
+    @Binding var addCubeTrigger: Bool
+    
+    func makeUIView(context: Context) -> ARView {
+        let arConfiguration = ARWorldTrackingConfiguration()
+        arConfiguration.planeDetection = [.horizontal]
+        arView.session.run(arConfiguration)
+        
+        // Create a horizontal anchor for the scene.
+        let anchor = AnchorEntity(plane: .horizontal)
+        arView.scene.anchors.append(anchor)
+        context.coordinator.arView = arView
+        context.coordinator.anchor = anchor
+        
+        // Add the first cube.
+        context.coordinator.addCube()
+        
+        return arView
+    }
+    
+    func updateUIView(_ uiView: ARView, context: Context) {
+        // When triggered, add a new cube.
+        if addCubeTrigger {
+            context.coordinator.addCube()
+            addCubeTrigger = false
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+    
+    class Coordinator: NSObject {
+        var parent: ARViewContainer
+        weak var arView: ARView?
+        var anchor: AnchorEntity?
+        var cubeCount: Int = 0
+        
+        init(_ parent: ARViewContainer) {
+            self.parent = parent
+        }
+        
+        /// Adds a new cube (with its own info box) to the scene and installs built-in gestures.
+        func addCube() {
+            guard let anchor = anchor, let arView = arView else { return }
+            
+            // Offset each cube slightly to avoid overlap.
+            let offset: Float = Float(cubeCount) * 0.15
+            let newCube = ModelEntity(mesh: .generateBox(size: 0.1),
+                                      materials: [SimpleMaterial(color: .gray, isMetallic: true)])
+            newCube.name = "Cube \(cubeCount + 1)"
+            newCube.position = [offset, 0.05, 0]
+            newCube.generateCollisionShapes(recursive: true)
+            
+            // Create and attach the info box.
+            let infoBox = ARViewContainer.createInfoBox()
+            infoBox.position = SIMD3<Float>(0, 0.1, 0)
+            newCube.addChild(infoBox)
+            
+            // Add the cube to the anchor.
+            anchor.addChild(newCube)
+            
+            // Install built-in gestures for translation, rotation, and scaling.
+            arView.installGestures([.translation, .rotation, .scale], for: newCube)
+            
+            cubeCount += 1
+        }
+    }
+    
+    /// Helper method to create an info box for a cube.
+    static func createInfoBox() -> Entity {
+        let textMesh = MeshResource.generateText(
+            "Cube Info\nColor: Gray\nSize: 0.10m",
+            extrusionDepth: 0.01,
+            font: .systemFont(ofSize: 0.03),
+            containerFrame: .zero,
+            alignment: .center,
+            lineBreakMode: .byWordWrapping
+        )
+        let textMaterial = SimpleMaterial(color: .black, isMetallic: false)
+        let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
+        textEntity.scale = SIMD3<Float>(0.5, 0.5, 0.5)
+        
+        let textBounds = textMesh.bounds
+        let textWidth = textBounds.max.x - textBounds.min.x
+        let textHeight = textBounds.max.y - textBounds.min.y
+        
+        let boxMesh = MeshResource.generateBox(size: [textWidth * 0.6, textHeight * 0.6, 0.01])
+        let boxMaterial = SimpleMaterial(color: .white, isMetallic: false)
+        let boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
+        boxEntity.position = [0, 0, -0.005]
+        
+        let textOffsetX = -textBounds.center.x * 0.5
+        let textOffsetY = -textBounds.center.y * 0.5
+        textEntity.position = [textOffsetX, textOffsetY, 0.005]
+        
+        let infoBoxEntity = Entity()
+        infoBoxEntity.addChild(boxEntity)
+        infoBoxEntity.addChild(textEntity)
+        
+        return infoBoxEntity
+    }
+}
