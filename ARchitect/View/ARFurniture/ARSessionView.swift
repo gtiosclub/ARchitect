@@ -94,7 +94,7 @@ struct ARViewContainer: UIViewRepresentable {
         let arConfiguration = ARWorldTrackingConfiguration()
         arConfiguration.planeDetection = [.horizontal]
         arView.session.run(arConfiguration)
-        
+       
         return arView
     }
     
