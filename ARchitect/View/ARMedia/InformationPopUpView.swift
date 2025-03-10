@@ -10,92 +10,76 @@ import SwiftUI
 struct InformationPopUpView: View {
     @EnvironmentObject var sheetManager: SheetManager
     
-    let didClose : () -> Void
+    let didClose: () -> Void
+    let name: String
+    let description: String
+    let cost: String
+    let stores: String
+
     var body: some View {
-        VStack(spacing: .zero){
-            title
-            description
-            cost
-            stores
+        VStack(spacing: 12) {
+            // Title
+            Text(name.isEmpty ? "Furniture Name" : name)
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 8)
+                .foregroundColor(.black)
+
+            // Information Sections
+            VStack(alignment: .leading, spacing: 10) {
+                labeledText(title: "Description:", content: description.isEmpty ? "No description available." : description)
+                labeledText(title: "Cost:", content: cost.isEmpty ? "N/A" : cost)
+                labeledText(title: "Stores:", content: stores.isEmpty ? "No store information available." : stores)
+            }
+            .padding(.horizontal)
+
+            Spacer()
         }
-        .frame(width: 300)
-        .padding(.horizontal,24)
-        .padding(.vertical,40)
-        .multilineTextAlignment(.center)
-        .background(background)
+        .frame(width: 280, height: 300)
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white).shadow(radius: 6))
         .overlay(alignment: .topTrailing) {
             close
         }
         .transition(.opacity)
     }
-}
-
-private extension InformationPopUpView{
-    var close: some View{
+    
+    // Helper function for consistent label formatting
+    private func labeledText(title: String, content: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.black)
+            Text(content)
+                .font(.body)
+                .multilineTextAlignment(.leading)
+                .foregroundColor(.black)
+        }
+    }
+    
+    private var close: some View {
         Button {
             sheetManager.dismiss()
             didClose()
         } label: {
-            Image(systemName: "xmark")
-                .symbolVariant(.circle.fill)
-                .font(
-                    .system(size: 35,weight: .bold)
-                )
-            .foregroundStyle(.gray.opacity(0.4))
-            .padding(8)
+            Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 25, weight: .bold))
+                .foregroundColor(.black)
+                .padding(8)
+                .background(Color.white.opacity(0.6))
         }
-    }
-    var title: some View{
-        Text("Furniture Name")
-            .font(
-                .system(size: 30,weight: .bold)
-            )
-            .padding()
-    }
-    var description: some View{
-        VStack(alignment: .leading, spacing: 5){
-            Text("Description:")
-                .font(.title3)
-                .fontWeight(.heavy)
-                .foregroundColor(.black.opacity(0.8))
-            Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-                .multilineTextAlignment(.leading)
-        }
-    }
-    var cost: some View{
-        VStack(alignment: .leading, spacing: 5){
-            Text("Cost:")
-                .font(.title3)
-                .fontWeight(.heavy)
-                .foregroundColor(.black.opacity(0.8))
-            Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-                .multilineTextAlignment(.leading)
-        }
-    }
-    var stores: some View{
-        VStack(alignment: .leading, spacing: 5){
-            Text("Stores:")
-                .font(.title3)
-                .fontWeight(.heavy)
-                .foregroundColor(.black.opacity(0.8))
-            Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-                .multilineTextAlignment(.leading)
-        }
-    }
-
-}
-
-private extension InformationPopUpView{
-    var background: some View{
-        RoundedRectangle(cornerRadius: 8)
-            .fill(Color.white)
-            .shadow(color: .black.opacity(0.5), radius: 3)
-
     }
 }
 
 #Preview {
-    InformationPopUpView{}
-        .environmentObject(SheetManager())
-        .padding()
+    InformationPopUpView(
+        didClose: {},
+        name: "Modern Chair",
+        description: "A chair with a simple, clean design.",
+        cost: "$499.99",
+        stores: "Available at your nearest IKEA, Target, and Walmart."
+    )
+    .environmentObject(SheetManager())
 }

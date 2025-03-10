@@ -30,7 +30,6 @@ struct ARSessionView: View {
         ZStack {
             ARViewContainer(arView: $arView, selectedColor: $selectedColor)
                 .edgesIgnoringSafeArea(.all)
-            
             if showMenu {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Select Cube Color:")
@@ -94,13 +93,14 @@ struct ARViewContainer: UIViewRepresentable {
         arView.scene.anchors.append(anchor)
         context.coordinator.arView = arView
         context.coordinator.anchor = anchor
-        
         context.coordinator.addCube(with: .gray)
         
         let tapGesture = UITapGestureRecognizer(target: context.coordinator,
                                                 action: #selector(Coordinator.handleTapGesture(_:)))
         tapGesture.numberOfTapsRequired = 2
         arView.addGestureRecognizer(tapGesture)
+
+
         
         return arView
     }
@@ -172,6 +172,7 @@ struct ARViewContainer: UIViewRepresentable {
                     }
                 }
             }
+
         }
     }
     
