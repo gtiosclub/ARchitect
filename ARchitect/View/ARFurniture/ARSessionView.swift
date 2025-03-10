@@ -2,6 +2,17 @@ import SwiftUI
 import RealityKit
 import ARKit
 
+class CubeWrapper: Identifiable {
+    let id = UUID()
+    let entity: ModelEntity
+    var isLocked: Bool = false
+    var gestureRecognizers: [UIGestureRecognizer] = []
+    
+    init(entity: ModelEntity) {
+        self.entity = entity
+    }
+}
+
 struct ARSessionView: View {
     @State private var arView = ARView(frame: .zero)
     @State private var selectedColor: UIColor? = nil
@@ -19,6 +30,7 @@ struct ARSessionView: View {
         ZStack {
             ARViewContainer(arView: $arView, selectedColor: $selectedColor)
                 .edgesIgnoringSafeArea(.all)
+            
             if showMenu {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Select Cube Color:")
@@ -82,7 +94,13 @@ struct ARViewContainer: UIViewRepresentable {
         arView.scene.anchors.append(anchor)
         context.coordinator.arView = arView
         context.coordinator.anchor = anchor
+        
         context.coordinator.addCube(with: .gray)
+        
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator,
+                                                action: #selector(Coordinator.handleTapGesture(_:)))
+        tapGesture.numberOfTapsRequired = 2
+        arView.addGestureRecognizer(tapGesture)
         
         return arView
     }
@@ -104,7 +122,7 @@ struct ARViewContainer: UIViewRepresentable {
         var parent: ARViewContainer
         weak var arView: ARView?
         var anchor: AnchorEntity?
-        var cubeCount: Int = 0
+        var cubes: [CubeWrapper] = []
         
         init(_ parent: ARViewContainer) {
             self.parent = parent
@@ -113,23 +131,47 @@ struct ARViewContainer: UIViewRepresentable {
         func addCube(with color: UIColor) {
             guard let anchor = anchor, let arView = arView else { return }
             
-            let offset: Float = Float(cubeCount) * 0.15
-            let cube = ModelEntity(
+            let offset: Float = Float(cubes.count) * 0.15
+            let modelEntity = ModelEntity(
                 mesh: .generateBox(size: 0.1),
                 materials: [SimpleMaterial(color: color, isMetallic: false)]
             )
-            cube.name = "Cube \(cubeCount + 1)"
-            cube.position = [offset, 0.05, 0]
-            cube.generateCollisionShapes(recursive: true)
+            modelEntity.name = "Cube \(cubes.count + 1)"
+            modelEntity.position = [offset, 0.05, 0]
+            modelEntity.generateCollisionShapes(recursive: true)
             
             let infoBox = ARViewContainer.createInfoBox(color: color)
             infoBox.position = SIMD3<Float>(0, 0.1, 0)
-            cube.addChild(infoBox)
+            modelEntity.addChild(infoBox)
             
-            anchor.addChild(cube)
-            arView.installGestures([.translation, .rotation, .scale], for: cube)
+            anchor.addChild(modelEntity)
             
-            cubeCount += 1
+            let gestures = arView.installGestures([.translation, .rotation, .scale], for: modelEntity)
+            let cubeWrapper = CubeWrapper(entity: modelEntity)
+            cubeWrapper.gestureRecognizers = gestures
+            cubes.append(cubeWrapper)
+        }
+        
+        @objc func handleTapGesture(_ sender: UITapGestureRecognizer) {
+            guard let arView = arView else { return }
+            let tapLocation = sender.location(in: arView)
+            if let tappedEntity = arView.entity(at: tapLocation) {
+                if let cubeWrapper = cubes.first(where: { $0.entity === tappedEntity || $0.entity.children.contains(where: { $0 === tappedEntity }) }) {
+                    if !cubeWrapper.isLocked {
+                        cubeWrapper.isLocked = true
+                        for gesture in cubeWrapper.gestureRecognizers {
+                            arView.removeGestureRecognizer(gesture)
+                        }
+                        cubeWrapper.gestureRecognizers.removeAll()
+                        print("\(cubeWrapper.entity.name) locked")
+                    } else {
+                        cubeWrapper.isLocked = false
+                        let newGestures = arView.installGestures([.translation, .rotation, .scale], for: cubeWrapper.entity)
+                        cubeWrapper.gestureRecognizers = newGestures
+                        print("\(cubeWrapper.entity.name) unlocked")
+                    }
+                }
+            }
         }
     }
     
