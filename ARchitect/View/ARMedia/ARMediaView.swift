@@ -62,7 +62,7 @@ struct SubARView: View {
         VStack {
             ZStack(alignment: .bottomLeading) {
                 // AR Image with rounded corners and overlay
-                Image(post.imageName)
+                Image(uiImage: UIImage())
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(15)

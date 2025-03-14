@@ -29,9 +29,9 @@ struct PostView: View {
                 .padding(.horizontal)
                 
                 // AR Image with Overlays
-                NavigationLink(destination: ARFeedView()) {
+                NavigationLink(destination: VREnvironmentView(config: post.environment)) {
                     ZStack(alignment: .topLeading) {
-                        Image(post.imageName)
+                        Image(uiImage: UIImage(named: post.imageName) ?? UIImage())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .cornerRadius(12)
