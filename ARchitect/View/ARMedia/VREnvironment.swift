@@ -97,9 +97,10 @@ struct VREnvironmentView: View {
                 content.camera = .spatialTracking
             }
             .gesture(
-                TapGesture()
-                    .onEnded { _ in
-                        handleTap()
+                SpatialTapGesture()
+                    .onEnded { event in
+                        print(type(of: event))
+                        handleTap(at: event.location)
                     }
             )
             
@@ -160,7 +161,7 @@ struct VREnvironmentView: View {
     }
     
     // Handle tap interaction
-    private func handleTap() {
+    private func handleTap(at location: CGPoint) {
         isHover.toggle()
         
         if showInfoPanel {
