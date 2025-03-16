@@ -12,6 +12,17 @@ class CommentViewModel: ObservableObject {
         Comment(text: "This is a test comment!", timestamp: Date(), publisher: "TestUser", likes: 0)
     ]
     
+    struct Comment: Identifiable {
+        let id = UUID()
+        let username: String = "username"
+        let userImage: String = "person.circle.fill"
+        let text: String
+        let timestamp: Date
+        let publisher: String
+        var likes: Int
+        var isLiked: Bool = false
+    }
+    
     func addComment(text: String, publisher: String) {
         let newComment = Comment(text: text, timestamp: Date(), publisher: publisher, likes: 0)
         comments.append(newComment)

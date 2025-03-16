@@ -9,7 +9,7 @@ import SwiftUI
 import RealityKit
 import ARKit
 
-struct VREnvironmentConfig {
+struct VREnvironmentConfig2 {
     let environmentModel: String?
     let environmentPosition: SIMD3<Float>
     let environmentScale: SIMD3<Float>
@@ -28,13 +28,13 @@ struct VREnvironmentConfig {
 }
 
 struct VREnvironmentView: View {
-    let config: VREnvironmentConfig
+    let config: VREnvironmentConfig2
     
     @State private var isHover: Bool = false
     @State private var entities: [ModelEntity] = []
     @State private var selectedEntity: ModelEntity? = nil
     @State private var showInfoPanel: Bool = false
-    @State private var selectedObjectInfo: VREnvironmentConfig.VRObjectConfig? = nil
+    @State private var selectedObjectInfo: VREnvironmentConfig2.VRObjectConfig? = nil
     
     var body: some View {
         ZStack {
@@ -196,12 +196,12 @@ struct VREnvironmentView: View {
 // Preview provider
 struct VREnvironmentView_Previews: PreviewProvider {
     static var previews: some View {
-        VREnvironmentView(config: VREnvironmentConfig(
+        VREnvironmentView(config: VREnvironmentConfig2(
             environmentModel: "living_room",
             environmentPosition: SIMD3<Float>(0, 0, 0),
             environmentScale: SIMD3<Float>(0.1, 0.1, 0.1),
             objects: [
-                VREnvironmentConfig.VRObjectConfig(
+                VREnvironmentConfig2.VRObjectConfig(
                     modelName: "modern chair",
                     displayName: "Modern Chair",
                     description: "A stylish modern chair with minimalist design.",
@@ -213,7 +213,7 @@ struct VREnvironmentView_Previews: PreviewProvider {
                         "Dimensions": "28\" × 30\" × 32\""
                     ]
                 ),
-                VREnvironmentConfig.VRObjectConfig(
+                VREnvironmentConfig2.VRObjectConfig(
                     modelName: "GreyCouch",
                     displayName: "Grey Couch",
                     description: "Grey Couch.",
@@ -234,12 +234,12 @@ struct VREnvironmentView_Previews: PreviewProvider {
 /*
 struct ContentView: View {
     var body: some View {
-        VREnvironmentView(config: VREnvironmentConfig(
+        VREnvironmentView(config: VREnvironmentConfig2(
             environmentModel: "modern_apartment",
             environmentPosition: SIMD3<Float>(0, 0, 0),
             environmentScale: SIMD3<Float>(0.1, 0.1, 0.1),
             objects: [
-                VREnvironmentConfig.VRObjectConfig(
+                VREnvironmentConfig2.VRObjectConfig(
                     modelName: "modern chair",
                     displayName: "Designer Chair",
                     description: "Award-winning modern designer chair.",

@@ -29,21 +29,18 @@ struct PostView: View {
                 .padding(.horizontal)
                 
                 // AR Image with Overlays
-                NavigationLink(destination: VREnvironmentView(config: post.environment)) {
-                    ZStack(alignment: .topLeading) {
-                        Image(uiImage: UIImage(named: post.imageName) ?? UIImage())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .cornerRadius(12)
-                        
-                        // Cube Icon at Bottom Right
-                        HStack {
-                            Spacer()
-                            Image(systemName: "cube.transparent.fill")
-                                .font(.title)
-                                .foregroundColor(.black.opacity(0.8))
-                                .padding()
-                        }
+                ZStack(alignment: .topLeading) {
+                    
+                    ARSessionView2(config: post.environment)
+                        .cornerRadius(12)
+                    
+                    // Cube Icon at Top Right
+                    HStack {
+                        Spacer()
+                        Image(systemName: "cube.transparent.fill")
+                            .font(.title)
+                            .foregroundColor(.black.opacity(0.8))
+                            .padding()
                     }
                 }
                 
