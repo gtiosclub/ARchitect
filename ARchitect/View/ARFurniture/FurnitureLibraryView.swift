@@ -36,6 +36,7 @@ struct FurnitureLibraryView: View {
                 HStack {
                     ForEach(recentItems.prefix(3)) { item in
                         FurnitureCard(item: item)
+                            .frame(width:150, height:200)
                     }
                 }
                 .padding(.horizontal)
