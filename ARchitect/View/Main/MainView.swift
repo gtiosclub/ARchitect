@@ -22,28 +22,14 @@ struct MainView: View {
     }
     
     var tabController: some View {
-		TabView(selection: $selectedTab) {
-			FurnitureEntryView()
-				.tabItem {
-					Image(systemName: selectedTab == 0 ? "camera.circle.fill" : "camera")
-					Text("AR Furniture")
-				}
-				.tag(0)
-			
-			ARFeedView()
-				.tabItem {
-					Image(systemName: selectedTab == 1 ? "figure.socialdance.circle" : "figure.socialdance")
-					Text("AR Feed")
-				}
-				.tag(1)
-			
-			ProfileView()
-				.tabItem {
-					Image(systemName: selectedTab == 2 ? "person.circle.fill" : "person")
-					Text("Profile")
-				}
-				.tag(2)
-			
+        TabView {
+            Tab("AR Furniture", systemImage: "camera.circle.fill") {
+                FurnitureEntryView()
+            }
+            
+            Tab("AR Feed", systemImage: "figure.socialdance.circle") {
+                ARMediaView()
+            }
         }
     }
 }

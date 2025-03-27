@@ -11,6 +11,8 @@ struct SignUpView: View {
 	@State private var username: String = ""
 	@State private var password: String = ""
 	@State private var email: String = ""
+    @Binding var isAuthenticated: Bool
+    
 	var body: some View {
 		VStack(alignment: .leading) {
 			Spacer().frame(height: 50)
@@ -57,6 +59,7 @@ struct SignUpView: View {
 			HStack {
 				Spacer()
 				Button(action: {
+                    isAuthenticated = true
 					print("Welcome \(username), your password is \(password), your email is \(email)")
 				}) {
 					Text("Sign Up")
@@ -79,5 +82,5 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView()
+    SignUpView(isAuthenticated: .constant(false))
 }

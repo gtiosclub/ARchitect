@@ -29,7 +29,7 @@ struct AuthenticationView: View {
 				.frame(maxHeight: .infinity, alignment: .top)
 				.padding()
 				VStack(spacing: 12) {
-					NavigationLink(destination: LoginView()) {
+                    NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
 						Text("Login")
 							.font(.headline)
 							.foregroundColor(.black)
@@ -42,7 +42,7 @@ struct AuthenticationView: View {
 							)
 					}
 
-					NavigationLink(destination: SignUpView()) {
+                    NavigationLink(destination: SignUpView(isAuthenticated: $isAuthenticated)) {
 						Text("Sign Up")
 							.font(.headline)
 							.foregroundColor(.white)

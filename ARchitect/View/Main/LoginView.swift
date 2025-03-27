@@ -10,6 +10,8 @@ import SwiftUI
 struct LoginView: View {
 	@State private var username: String = ""
 	@State private var password: String = ""
+    @Binding var isAuthenticated: Bool
+    
     var body: some View {
 		VStack(alignment: .leading) {
 			Spacer().frame(height: 100)
@@ -55,6 +57,7 @@ struct LoginView: View {
 			HStack {
 				Spacer()
 				Button(action: {
+                    isAuthenticated = true
 					print("Welcome \(username), your password is \(password)")
 				}) {
 					Text("Login")
@@ -74,5 +77,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView(isAuthenticated: .constant(false))
 }
