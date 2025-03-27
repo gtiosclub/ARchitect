@@ -31,13 +31,24 @@ struct FurnitureDetailView: View {
             }
             .padding()
             .navigationTitle("Furniture Details")
-            
         }
     }
 }
 
-
-
+// actual VR view
+//struct Furniture3DView: View {
+//    let item: FurnitureItem
+//    
+//    var body: some View {
+//        VStack {
+//            Text("This is a placeholder")
+//                .font(.largeTitle)
+//                .padding()
+//            Spacer()
+//        }
+//        .navigationTitle("3D View")
+//    }
+//}
 
 struct FurnitureLibraryDetail_Previews: PreviewProvider {
     static var previews: some View {
