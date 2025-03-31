@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct FurnitureEntryView: View {
     @State private var selectedTab: String = "Furniture"
     @State private var searchText: String = ""
