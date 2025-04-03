@@ -3,7 +3,7 @@ import SwiftUI
 struct ProfileView: View {
 	@State private var selectedColumn = 0
 	@State private var indicatorPosition: CGFloat = -UIScreen.main.bounds.width / 4
-	
+    @State private var projects: [Project] = []
 	var body: some View {
 		VStack {
 			// Profile Picture and Username
@@ -73,17 +73,11 @@ struct ProfileView: View {
 			if selectedColumn == 0 {
 				GeneralView()
 			} else {
-				ProjectsView()
+                ProjectsView(projects: $projects)
 			}
 		}
 	}
 }
-
-
-
-
-
-
 
 #Preview {
 	ProfileView()

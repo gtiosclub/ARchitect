@@ -11,6 +11,8 @@ import SwiftUI
 struct FurnitureEntryView: View {
     @State private var selectedTab: String = "Furniture"
     @State private var searchText: String = ""
+    @State private var projects: [Project] = []
+
     
     let tabs = ["Projects", "Furniture"]
     let filters = ["All Projects", "Favorites", "A-Z", "Private", "Public"]
@@ -21,7 +23,7 @@ struct FurnitureEntryView: View {
                 navigationHeader
                 
                 if selectedTab == "Projects" {
-                    ProjectsView()
+                    ProjectsView(projects: $projects)
                 } else {
                     FurnitureLibraryView()
                 }
@@ -30,7 +32,7 @@ struct FurnitureEntryView: View {
             }
             .toolbar {
                 NavigationLink {
-                    ARSessionView()
+                    ARSessionView(projects: $projects)
                 } label: {
                     Text("Start AR")
                 }

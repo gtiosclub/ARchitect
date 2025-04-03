@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct ProjectsView: View {
     @State private var selectedTab: String = "Projects"
     @State private var searchText: String = ""
@@ -18,89 +16,96 @@ struct ProjectsView: View {
     let filters = ["All Projects", "Favorites", "A-Z", "Private", "Public"]
     
     // Sample project data
-    let projects = [
-        Project(name: "Living Room", tags: ["Modern", "Sunlit"], description: "Short description"),
-        Project(name: "Office", tags: ["Minimalistic"], description: "Short description"),
-        Project(name: "Office", tags: ["90s"], description: "Short description"),
-        Project(name: "Office", tags: ["Minimalistic"], description: "Short description"),
-        Project(name: "Kitchen", tags: ["Modern"], description: "Short description"),
-        Project(name: "Living Room", tags: ["Modern", "Sunlit"], description: "Short description"),
-        Project(name: "Sunlit Bedroom", tags: ["Nature", "Cottage core"], description: "Short description"),
-        Project(name: "Cool Living Room", tags: ["Contemporary", "Colorful"], description: "Short description")
-    ]
+    @Binding var projects: [Project]
     
     var body: some View {
-        ZStack {
-            Color(.systemGray6)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 16) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        // Recent section
-                        Text("Recent")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 15) {
-                                // Display first two projects in horizontal scroll
-                                ForEach(projects.prefix(2), id: \.name) { project in
-                                    ProjectCard(project: project, isLocked: false)
-                                        .frame(width: 170, height: 220)
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                        
-                        // Filters
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(filters, id: \.self) { filter in
-                                    Button(action: {
-                                        selectedFilter = filter
-                                    }) {
-                                        Text(filter)
-                                            .fontWeight(selectedFilter == filter ? .bold : .regular)
-                                            .foregroundColor(.black)
-                                            .padding(.bottom, 5)
-                                            .overlay(
-                                                Rectangle()
-                                                    .frame(height: 2)
-                                                    .foregroundColor(selectedFilter == filter ? .black : .clear)
-                                                    .offset(y: 4),
-                                                alignment: .bottom
-                                            )
+        NavigationStack {
+            ZStack {
+                Color(.systemGray6)
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 16) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            // Recent section
+                            Text("Recent")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .padding(.horizontal)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 15) {
+                                    // Display first two projects in horizontal scroll
+                                    ForEach(projects.prefix(2), id: \.name) { project in
+                                        ProjectCard(project: project, isLocked: false)
+                                            .frame(width: 170, height: 220)
                                     }
                                 }
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
+                            
+                            // Filters
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(filters, id: \.self) { filter in
+                                        Button(action: {
+                                            selectedFilter = filter
+                                        }) {
+                                            Text(filter)
+                                                .fontWeight(selectedFilter == filter ? .bold : .regular)
+                                                .foregroundColor(.black)
+                                                .padding(.bottom, 5)
+                                                .overlay(
+                                                    Rectangle()
+                                                        .frame(height: 2)
+                                                        .foregroundColor(selectedFilter == filter ? .black : .clear)
+                                                        .offset(y: 4),
+                                                    alignment: .bottom
+                                                )
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            
+                            // Grid of projects
+                            //                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                            //                            ForEach(projects, id: \.name) { project in
+                            //                                ProjectCard(project: project, isLocked: Bool.random())
+                            //                                    .frame(height: 220)
+                            //                            }
+                            //                        }
+                            //                        .padding(.horizontal)
                         }
-                        
-                        // Grid of projects
+                    }
+                    ScrollView {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                            ForEach(projects, id: \.name) { project in
-                                ProjectCard(project: project, isLocked: Bool.random())
-                                    .frame(height: 220)
+                            ForEach($projects) { $project in
+                                NavigationLink(destination: ProjectDetailView(project: .constant(project))) {
+                                    ProjectCard(project: project, isLocked: false)
+                                        .frame(height: 220)
+                                }
                             }
                         }
                         .padding(.horizontal)
                     }
+                    
+                    
+                    Spacer()
                 }
-                
-                Spacer()
+                .padding(.top)
             }
-            .padding(.top)
         }
     }
 }
 
 // Model for project data
-struct Project {
+struct Project: Identifiable {
+    var id = UUID()
     var name: String
     var tags: [String]
     var description: String
+    var screenshot: UIImage? = nil
 }
 
 // Project card component
@@ -111,11 +116,17 @@ struct ProjectCard: View {
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topTrailing) {
-                // Placeholder image
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .cornerRadius(10)
+                if let screenshot = project.screenshot {
+                    Image(uiImage: screenshot)
+                        .resizable()
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .cornerRadius(10)
+                } else {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .cornerRadius(10)
+                }
                 
                 // Lock icon
                 if isLocked {
@@ -181,6 +192,34 @@ struct ProjectCard: View {
     }
 }
 
+struct ProjectDetailView: View {
+    @Binding var project: Project
+
+    var body: some View {
+        Form {
+            Section(header: Text("Preview")) {
+                if let screenshot = project.screenshot {
+                    Image(uiImage: screenshot)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                        .cornerRadius(10)
+                }
+            }
+            Section(header: Text("Project Name")) {
+                TextField("Name", text: $project.name)
+            }
+            Section(header: Text("Description")) {
+                TextField("Description", text: $project.description)
+            }
+        }
+        .navigationTitle("Edit Project")
+    }
+}
+
 #Preview {
-    ProjectsView()
+    ProjectsView(projects: .constant([
+           Project(name: "Living Room", tags: ["Modern"], description: "A modern living room design."),
+           Project(name: "Office Space", tags: ["Minimalistic"], description: "A clean and minimalistic office setup.")
+       ]))
 }

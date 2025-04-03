@@ -17,6 +17,12 @@ struct ARSessionView: View {
     @State private var arView = ARView(frame: .zero)
     @State private var selectedColor: UIColor? = nil
     @State private var showMenu = false
+    
+    @State private var showSavePrompt = false
+    @State private var newProjectName = ""
+    @State private var newProjectDescription = ""
+    @State private var screenshot: UIImage?
+    @Binding var projects: [Project]
 
     let colors: [(name: String, color: UIColor)] = [
         ("Gray", .gray),
@@ -76,8 +82,65 @@ struct ARSessionView: View {
                     .cornerRadius(8)
             }
             .position(x: 30, y: 50)
+            
+            Button(action: saveProject) {
+                Image(systemName: "square.and.arrow.down")
+                    .padding()
+                    .background(Color.white.opacity(0.8))
+                    .cornerRadius(8)
+            }
+            .position(x: UIScreen.main.bounds.width - 50, y: 50) // Top right
+        }
+        .sheet(isPresented: $showSavePrompt) {
+            VStack {
+                Text("Save Project")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                if let screenshot = screenshot {
+                    Image(uiImage: screenshot)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                        .cornerRadius(10)
+                }
+                
+                TextField("Project Name", text: $newProjectName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                TextField("Project Description", text: $newProjectDescription)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Save") {
+                    let newProject = Project(
+                        name: newProjectName,
+                        tags: [],
+                        description: newProjectDescription,
+                        screenshot: screenshot
+                    )
+                    projects.append(newProject)
+                    showSavePrompt = false
+                    newProjectName = ""
+                    newProjectDescription = ""
+                }
+                .buttonStyle(.borderedProminent)
+                .padding()
+            }
+            .padding()
         }
     }
+    
+    func saveProject() {
+        arView.snapshot(saveToHDR: false) { image in
+            if let image = image {
+                screenshot = image
+                showSavePrompt = true
+            }
+        }
+    }
+
 }
 
 struct ARViewContainer: UIViewRepresentable {
