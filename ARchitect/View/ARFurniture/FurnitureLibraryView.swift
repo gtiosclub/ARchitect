@@ -8,11 +8,11 @@ struct FurnitureLibraryView: View {
     let filters = [
         ("Chairs", "chair.fill"),
         ("Drawers", "archivebox.fill"),
-        ("Lights", "lightbulb.fill"),
+        ("Lights", "lamp.floor.fill"),
         ("Beds", "bed.double.fill"),
-        ("Sofas", "couch.fill"),
-        ("Desks", "desk.fill"),
-        ("Shelves", "books.vertical.fill")
+        ("Sofas", "sofa.fill"),
+        ("Desks", "table.furniture.fill"),
+        ("Shelves", "cabinet.fill")
     ]
     
     let recentItems: [FurnitureItem] = [
@@ -36,6 +36,7 @@ struct FurnitureLibraryView: View {
                 HStack {
                     ForEach(recentItems.prefix(3)) { item in
                         FurnitureCard(item: item)
+                            .frame(width:150, height:200)
                     }
                 }
                 .padding(.horizontal)
