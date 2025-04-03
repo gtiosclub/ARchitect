@@ -31,12 +31,9 @@ struct FurnitureDetailView: View {
             }
             .padding()
             .navigationTitle("Furniture Details")
-            
         }
     }
 }
-
-
 
 
 struct FurnitureLibraryDetail_Previews: PreviewProvider {
