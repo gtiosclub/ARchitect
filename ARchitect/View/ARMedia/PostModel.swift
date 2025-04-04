@@ -20,29 +20,29 @@ struct Post: Identifiable {
     var user_liked: Bool = false
     var commentsModel: CommentViewModel = CommentViewModel()
    
-    var environment: VREnvironmentConfig
-        
-        init(
-            username: String,
-            userImage: String,
-            title: String,
-            imageName: String,
-            tags: [String],
-            description: String,
-            timeAgo: String,
-            likes: Int
-        ) {
-            self.username = username
-            self.userImage = userImage
-            self.title = title
-            self.imageName = imageName
-            self.tags = tags
-            self.description = description
-            self.timeAgo = timeAgo
-            self.likes = likes
-            
-            self.environment = VREnvironmentConfig(postID: self.id)
-        }
+//    var environment: VREnvironmentConfig
+//
+//        init(
+//            username: String,
+//            userImage: String,
+//            title: String,
+//            imageName: String,
+//            tags: [String],
+//            description: String,
+//            timeAgo: String,
+//            likes: Int
+//        ) {
+//            self.username = username
+//            self.userImage = userImage
+//            self.title = title
+//            self.imageName = imageName
+//            self.tags = tags
+//            self.description = description
+//            self.timeAgo = timeAgo
+//            self.likes = likes
+//            
+//            self.environment = VREnvironmentConfig(postID: self.id)
+//        }
     
     mutating func toggleLike() {
         if user_liked {
@@ -57,9 +57,9 @@ struct Post: Identifiable {
         commentsModel.addComment(text: text, publisher: publisher)
     }
     
-    func numberOfComments() -> Int {
-        commentsModel.length()
-    }
+//    func numberOfComments() -> Int {
+//        commentsModel.length()
+//    }
     
     
 }

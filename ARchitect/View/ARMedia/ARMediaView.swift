@@ -8,26 +8,32 @@
 import SwiftUI
 
 struct ARMediaView: View {
-    @State var posts: [Post] = [
-        Post(
-            username: "username",
-            userImage: "person.circle.fill", // SF Symbol for user avatar
-            title: "1990 Vintage",
-            imageName: "ar_room1", // Replace with actual asset name
-            tags: ["vintage", "retro", "vibe"],
-            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-            timeAgo: "4 days ago",
-            likes: 120),
-        Post(
-            username: "Bob",
-            userImage: "person.circle.fill", // SF Symbol for user avatar
-            title: "Virtual Office",
-            imageName: "ar_room2", // Replace with actual asset name
-            tags: ["vintage", "retro"],
-            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-            timeAgo: "10 days ago",
-            likes: 100),
-    ]
+    @State var posts: [Post]
+    
+    init() {
+        //Firebase call gets all posts
+        posts = [
+            Post(
+                username: "username",
+                userImage: "person.circle.fill", // SF Symbol for user avatar
+                title: "1990 Vintage",
+                imageName: "ar_room1", // Replace with actual asset name
+                tags: ["vintage", "retro", "vibe"],
+                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+                timeAgo: "4 days ago",
+                likes: 120),
+            Post(
+                username: "Bob",
+                userImage: "person.circle.fill", // SF Symbol for user avatar
+                title: "Virtual Office",
+                imageName: "ar_room2", // Replace with actual asset name
+                tags: ["vintage", "retro"],
+                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+                timeAgo: "10 days ago",
+                likes: 100),
+        ]
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -119,7 +125,7 @@ struct SubARView: View {
                 }
                 
                 Button(action: {
-                    post.addComment(text: "New Comment!", publisher: "AnonymousUser")
+//                    post.addComment(text: "New Comment!", publisher: "AnonymousUser")
                 }) {
                     HStack {
                         Image(systemName: "ellipsis.message")
@@ -127,11 +133,12 @@ struct SubARView: View {
                     }
                 }
                 
+                Spacer()
+                
                 Text("\(post.timeAgo)")
                     .font(.caption)
                     .padding(.leading, 30)
                 
-                Spacer()
             }
             .padding(.horizontal)
         }

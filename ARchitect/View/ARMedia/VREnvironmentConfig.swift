@@ -10,7 +10,7 @@ import Foundation
 import simd
 
 // MARK: - VREnvironmentConfig
-struct VREnvironmentConfig {
+struct VREnvironmentConfig: Identifiable {
     let id: UUID               // Ties environment to Post ID
     let environmentModel: String?
     let environmentPosition: SIMD3<Float>

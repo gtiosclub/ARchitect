@@ -10,6 +10,21 @@ import SwiftUI
 struct PostView: View {
     @Binding var post: Post
     @State private var showComments = false
+    let environment: VREnvironmentConfig
+    
+    init(post: Binding<Post>?, showComments: Bool = false) {
+        guard let unwrappedPost = post else {
+            fatalError("Post binding must not be nil")
+        }
+        let postID = unwrappedPost.id
+        
+        self._post = unwrappedPost
+        self.showComments = showComments
+        
+        //Firebase call for getting an environment with just the post ID
+        let environments = [VREnvironmentConfig(postID: postID)]
+        environment = environments.first(where: { $0.id == postID}) ?? VREnvironmentConfig(postID: postID)
+    }
 
     var body: some View {
         NavigationStack {
@@ -31,7 +46,7 @@ struct PostView: View {
                 // AR Image with Overlays
                 ZStack(alignment: .topLeading) {
                     
-                    ARSessionView2(config: post.environment)
+                    ARSessionView2(config: environment)
                         .cornerRadius(12)
                     
                     // Cube Icon at Top Right
@@ -110,7 +125,7 @@ struct PostView: View {
                 .padding(.horizontal)
                 .sheet(isPresented: $showComments) {
                     // iOS 16+ allows us to specify detents for medium, large, etc.
-                    CommentSectionView(viewModel: post.commentsModel)
+                    CommentSectionView(viewModel: $post.commentsModel)
                         .presentationDetents([.medium, .large])
                 }
             }
@@ -121,16 +136,16 @@ struct PostView: View {
 
 
 #Preview {
-    PostView(post: .constant(
-        Post(
-            username: "username",
-            userImage: "person.circle.fill",
-            title: "1990 Vintage",
-            imageName: "ar_room1",
-            tags: ["vintage", "retro", "vibe"],
-            description: "Bold interior design project that revives the vibrant energy of the early '80s.",
-            timeAgo: "4 days ago",
-            likes: 120
-        )
-    ))
+    @Previewable @State var post = Post(
+        username: "username",
+        userImage: "person.circle.fill",
+        title: "1990 Vintage",
+        imageName: "ar_room1",
+        tags: ["vintage", "retro", "vibe"],
+        description: "Bold interior design project that revives the vibrant energy of the early '80s.",
+        timeAgo: "4 days ago",
+        likes: 120
+    )
+    
+    PostView(post: $post)
 }
