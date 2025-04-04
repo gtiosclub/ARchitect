@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostView: View {
-    @State var post: Post
+    @Binding var post: Post
     @State private var showComments = false
 
     var body: some View {
@@ -121,15 +121,16 @@ struct PostView: View {
 
 
 #Preview {
-    PostView(
-        post:Post(
+    PostView(post: .constant(
+        Post(
             username: "username",
-            userImage: "person.circle.fill", // SF Symbol for user avatar
+            userImage: "person.circle.fill",
             title: "1990 Vintage",
-            imageName: "ar_room1", // Replace with actual asset name
+            imageName: "ar_room1",
             tags: ["vintage", "retro", "vibe"],
-            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+            description: "Bold interior design project that revives the vibrant energy of the early '80s.",
             timeAgo: "4 days ago",
-            likes: 120)
-         )
+            likes: 120
+        )
+    ))
 }

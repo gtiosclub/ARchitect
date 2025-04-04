@@ -19,36 +19,47 @@ struct Post: Identifiable {
     var likes: Int
     var user_liked: Bool = false
     var commentsModel: CommentViewModel = CommentViewModel()
-    let environment = VREnvironmentConfig(
-        environmentModel: "apartment_room",
-        environmentPosition: SIMD3<Float>(0, 0.5, 0),
-        environmentScale: SIMD3<Float>(1, 1, 1),
-        objects: [
-            VREnvironmentConfig.VRObjectConfig(
-                modelName: "modern chair",
-                displayName: "Modern Chair",
-                description: "A stylish modern chair with minimalist design.",
-                position: SIMD3<Float>(0, -0.5, 0),
-                scale: SIMD3<Float>(0.005, 0.005, 0.005),
-                properties: [
-                    "Price": "$499.99",
-                    "Material": "Leather and metal",
-                    "Dimensions": "28\" × 30\" × 32\""
-                ]
-            ),
-            VREnvironmentConfig.VRObjectConfig(
-                modelName: "GreyCouch",
-                displayName: "Grey Couch",
-                description: "Grey Couch.",
-                position: SIMD3<Float>(0, -0.5, -2),
-                scale: SIMD3<Float>(0.0005, 0.0005, 0.0005),
-                properties: [
-                    "Price": "$299.99",
-                    "Material": "Polyester",
-                    "Dimensions": "48\" × 24\" × 18\""
-                ]
-            )
-            // Add more objects as needed
-        ]
-    )
+   
+    var environment: VREnvironmentConfig
+        
+        init(
+            username: String,
+            userImage: String,
+            title: String,
+            imageName: String,
+            tags: [String],
+            description: String,
+            timeAgo: String,
+            likes: Int
+        ) {
+            self.username = username
+            self.userImage = userImage
+            self.title = title
+            self.imageName = imageName
+            self.tags = tags
+            self.description = description
+            self.timeAgo = timeAgo
+            self.likes = likes
+            
+            self.environment = VREnvironmentConfig(postID: self.id)
+        }
+    
+    mutating func toggleLike() {
+        if user_liked {
+            likes = max(likes - 1, 0)
+        } else {
+            likes += 1
+        }
+        user_liked.toggle()
+    }
+    
+    mutating func addComment(text: String, publisher: String) {
+        commentsModel.addComment(text: text, publisher: publisher)
+    }
+    
+    func numberOfComments() -> Int {
+        commentsModel.length()
+    }
+    
+    
 }

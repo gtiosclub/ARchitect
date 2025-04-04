@@ -38,9 +38,11 @@ struct ARMediaView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        ForEach($posts) { $post in
-                            NavigationLink(destination: PostView(post: post)) {
-                                SubARView(post:$post)
+                        ForEach(posts) { post in
+                            if let binding = bindingForPost(id: post.id) {
+                                NavigationLink(destination: PostView(post: binding)) {
+                                    SubARView(post: binding)
+                                }
                             }
                         }
                     }
@@ -49,6 +51,12 @@ struct ARMediaView: View {
             }
         }
     }
+    
+    private func bindingForPost(id: UUID) -> Binding<Post>? {
+        guard let index = posts.firstIndex(where: { $0.id == id}) else { return nil}
+        return $posts[index]
+    }
+    
 }
 
 #Preview {
@@ -62,7 +70,7 @@ struct SubARView: View {
         VStack {
             ZStack(alignment: .bottomLeading) {
                 // AR Image with rounded corners and overlay
-                Image(uiImage: UIImage())
+                Image(post.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(15)
@@ -101,8 +109,7 @@ struct SubARView: View {
             // Interaction Bar
             HStack {
                 Button(action: {
-                    post.user_liked.toggle()
-                    post.likes += post.user_liked ? 1 : -1
+                    post.toggleLike()
                 }) {
                     HStack {
                         Image(systemName: post.user_liked ? "heart.fill" : "heart")
@@ -111,7 +118,9 @@ struct SubARView: View {
                     }
                 }
                 
-                Button(action: {}) {
+                Button(action: {
+                    post.addComment(text: "New Comment!", publisher: "AnonymousUser")
+                }) {
                     HStack {
                         Image(systemName: "ellipsis.message")
                         Text("\(post.commentsModel.length())+")

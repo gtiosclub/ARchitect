@@ -2,23 +2,6 @@ import SwiftUI
 import RealityKit
 import ARKit
 
-struct VREnvironmentConfig {
-    let environmentModel: String?
-    let environmentPosition: SIMD3<Float>
-    let environmentScale: SIMD3<Float>
-    
-    let objects: [VRObjectConfig]
-    
-    struct VRObjectConfig: Identifiable {
-        let id = UUID()
-        let modelName: String
-        let displayName: String
-        let description: String
-        let position: SIMD3<Float>
-        let scale: SIMD3<Float>
-        let properties: [String: String]
-    }
-}
 
 class EntityWrapper: Identifiable {
     let id = UUID()
