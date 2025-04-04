@@ -2,23 +2,33 @@ import UIKit
 import ARKit
 import RealityKit
 
+class FurnitureWrapper {
+    let entity: ModelEntity
+    var isLocked: Bool = false
+    var gestureRecognizers: [UIGestureRecognizer] = []
+
+    init(entity: ModelEntity) {
+        self.entity = entity
+    }
+}
+
 class ARViewController: UIViewController {
     var arView: ARView!
     var selectedFurniture: ModelEntity?
     var projectName: String = ""
     var projectDescription: String = ""
     var usedFurnitureModels: [String] = [] // Track furniture models used in the AR session
+    var furnitureWrappers: [FurnitureWrapper] = [] // Track furniture models with gestures
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupARView()
         setupUI()
 
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-        arView.addGestureRecognizer(panGestureRecognizer)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+        tapGesture.numberOfTapsRequired = 2
+        arView.addGestureRecognizer(tapGesture)
 
-        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
-        arView.addGestureRecognizer(pinchGestureRecognizer)
     }
 
     func setupARView() {
@@ -26,12 +36,16 @@ class ARViewController: UIViewController {
         self.view.addSubview(arView)
 
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal]
+        configuration.planeDetection = [.horizontal] // Enable horizontal plane detection
+        configuration.environmentTexturing = .automatic // Enable environment texturing for better rendering
         arView.session.run(configuration)
+
+        // Ensure RealityKit rendering is properly configured
+        arView.automaticallyConfigureSession = false // Prevent ARView from overriding the session configuration
+        arView.renderOptions.insert(.disableMotionBlur) // Optional: Disable motion blur for better performance
     }
 
     func setupUI() {
-        // Add a back arrow to navigate back to the entry view
         let backArrowButton = UIButton(frame: CGRect(x: 10, y: 30, width: 50, height: 50))
         backArrowButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         backArrowButton.tintColor = .systemGray
@@ -82,7 +96,40 @@ class ARViewController: UIViewController {
         }
     }
 
-    func placeFurnitureInScene(modelEntity: ModelEntity) {
+    func createInfoBox(for modelEntity: ModelEntity, modelName: String) -> Entity {
+        let textMesh = MeshResource.generateText(
+            "Furniture Info\nName: \(modelName)\nSize: \(modelEntity.scale)",
+            extrusionDepth: 0.01,
+            font: .systemFont(ofSize: 0.03),
+            containerFrame: .zero,
+            alignment: .center,
+            lineBreakMode: .byWordWrapping
+        )
+        let textMaterial = SimpleMaterial(color: .black, isMetallic: false)
+        let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
+        textEntity.scale = SIMD3<Float>(0.5, 0.5, 0.5)
+
+        let textBounds = textMesh.bounds
+        let textWidth = textBounds.max.x - textBounds.min.x
+        let textHeight = textBounds.max.y - textBounds.min.y
+
+        let boxMesh = MeshResource.generateBox(size: [textWidth * 0.6, textHeight * 0.6, 0.01])
+        let boxMaterial = SimpleMaterial(color: .white, isMetallic: false)
+        let boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
+        boxEntity.position = [0, 0, -0.005]
+
+        let textOffsetX = -textBounds.center.x * 0.5
+        let textOffsetY = -textBounds.center.y * 0.5
+        textEntity.position = [textOffsetX, textOffsetY, 0.005]
+
+        let infoBoxEntity = Entity()
+        infoBoxEntity.addChild(boxEntity)
+        infoBoxEntity.addChild(textEntity)
+
+        return infoBoxEntity
+    }
+
+    func placeFurnitureInScene(modelEntity: ModelEntity, modelName: String) {
         guard let currentFrame = arView.session.currentFrame else {
             print("Error: Unable to get the current AR frame.")
             return
@@ -104,6 +151,18 @@ class ARViewController: UIViewController {
             anchor.addChild(modelEntity)
             arView.scene.anchors.append(anchor)
             selectedFurniture = modelEntity // Set the selected furniture for manipulation
+
+            // Add gestures for translation, rotation, and scaling
+            let gestures = arView.installGestures([.translation, .rotation, .scale], for: modelEntity)
+            let furnitureWrapper = FurnitureWrapper(entity: modelEntity)
+            furnitureWrapper.gestureRecognizers = gestures
+            furnitureWrappers.append(furnitureWrapper)
+
+            // Add an info box to the furniture
+            let infoBox = createInfoBox(for: modelEntity, modelName: modelName)
+            infoBox.position = SIMD3<Float>(0, 0.2, 0) // Position the info box above the model
+            modelEntity.addChild(infoBox)
+
             print("Furniture placed in the scene at position: \(worldPosition).")
         } else {
             // Show an alert if no valid plane is detected
@@ -131,39 +190,25 @@ class ARViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-        guard let arView = arView, let entity = selectedFurniture else { return }
 
-        let touchLocation = gesture.location(in: arView)
-        let hitTestResults = arView.raycast(from: touchLocation, allowing: .estimatedPlane, alignment: .horizontal)
-
-        if let firstResult = hitTestResults.first {
-            let worldPosition = SIMD3<Float>(firstResult.worldTransform.columns.3.x,
-                                             firstResult.worldTransform.columns.3.y,
-                                             firstResult.worldTransform.columns.3.z)
-
-            if gesture.state == .began {
-                print("Pan gesture began. Initial position: \(worldPosition)")
-            } else if gesture.state == .changed {
-                entity.position = worldPosition
-                print("Pan gesture changed. Updated position: \(worldPosition)")
-            } else if gesture.state == .ended {
-                print("Pan gesture ended. Final position: \(worldPosition)")
+    @objc func handleTapGesture(_ sender: UITapGestureRecognizer) {
+        let tapLocation = sender.location(in: arView)
+        if let tappedEntity = arView.entity(at: tapLocation) {
+            if let furnitureWrapper = furnitureWrappers.first(where: { $0.entity === tappedEntity }) {
+                if !furnitureWrapper.isLocked {
+                    furnitureWrapper.isLocked = true
+                    for gesture in furnitureWrapper.gestureRecognizers {
+                        arView.removeGestureRecognizer(gesture)
+                    }
+                    furnitureWrapper.gestureRecognizers.removeAll()
+                    print("\(furnitureWrapper.entity.name) locked")
+                } else {
+                    furnitureWrapper.isLocked = false
+                    let newGestures = arView.installGestures([.translation, .rotation, .scale], for: furnitureWrapper.entity)
+                    furnitureWrapper.gestureRecognizers = newGestures
+                    print("\(furnitureWrapper.entity.name) unlocked")
+                }
             }
-        } else {
-            print("Pan gesture failed. No valid plane detected.")
-        }
-    }
-
-    @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
-        guard let entity = selectedFurniture else { return }
-
-        if gesture.state == .changed {
-            let scale = Float(gesture.scale)
-            entity.scale *= SIMD3<Float>(scale, scale, scale)
-            gesture.scale = 1.0
-        } else if gesture.state == .ended {
-            print("Pinch gesture ended. Final scale: \(entity.scale)")
         }
     }
 }
@@ -178,7 +223,7 @@ extension ARViewController: FurnitureGalleryDelegate {
         do {
             let modelEntity = try ModelEntity.loadModel(contentsOf: modelURL)
             modelEntity.generateCollisionShapes(recursive: true)
-            placeFurnitureInScene(modelEntity: modelEntity)
+            placeFurnitureInScene(modelEntity: modelEntity, modelName: modelName) // Pass modelName to display in the info box
 
             // Record the furniture model used
             if !usedFurnitureModels.contains(modelName) {
