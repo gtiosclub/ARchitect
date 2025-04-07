@@ -10,6 +10,9 @@ struct PopUpContentView: View {
 	let categories = [
 		"Chairs", "Lights", "Tables", "Sofas"
 	]
+	let icons = [
+		"chair", "cabinet", "lamp.desk", "bed.double",
+	]
 	let items: [FurnitureItem] = [
 		FurnitureItem(name: "Dining Chair", type: "Chairs", tags: ["Modern"], imageName: "chair1"),
 		FurnitureItem(name: "Parson Dining Chair", type: "Chairs", tags: ["Vintage"], imageName: "chair2"),
