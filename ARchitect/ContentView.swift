@@ -2,10 +2,17 @@ import UIKit
 import ARKit
 import RealityKit
 
+enum MovementMode {
+    case horizontal
+    case vertical
+}
+
 class FurnitureWrapper {
     let entity: ModelEntity
     var isLocked: Bool = false
     var gestureRecognizers: [UIGestureRecognizer] = []
+    var movementMode: MovementMode = .horizontal // default to horizontal
+    var isSelected = false
 
     init(entity: ModelEntity) {
         self.entity = entity
@@ -19,6 +26,7 @@ class ARViewController: UIViewController {
     var projectDescription: String = ""
     var usedFurnitureModels: [String] = [] // Track furniture models used in the AR session
     var furnitureWrappers: [FurnitureWrapper] = [] // Track furniture models with gestures
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +36,11 @@ class ARViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
         tapGesture.numberOfTapsRequired = 2
         arView.addGestureRecognizer(tapGesture)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        arView.addGestureRecognizer(panGesture)
+
+
 
     }
 
@@ -65,6 +78,14 @@ class ARViewController: UIViewController {
         saveButton.layer.cornerRadius = 8
         saveButton.addTarget(self, action: #selector(takeScreenshot), for: .touchUpInside)
         self.view.addSubview(saveButton)
+        
+        let toggleMovementButton = UIButton(frame: CGRect(x: 20, y: 150, width: 200, height: 50))
+        toggleMovementButton.setTitle("Toggle Movement Mode", for: .normal)
+        toggleMovementButton.backgroundColor = .systemOrange
+        toggleMovementButton.layer.cornerRadius = 8
+        toggleMovementButton.addTarget(self, action: #selector(toggleMovementMode), for: .touchUpInside)
+        self.view.addSubview(toggleMovementButton)
+
     }
 
     @objc func goBackToEntryView() {
@@ -153,9 +174,15 @@ class ARViewController: UIViewController {
             selectedFurniture = modelEntity // Set the selected furniture for manipulation
 
             // Add gestures for translation, rotation, and scaling
-            let gestures = arView.installGestures([.translation, .rotation, .scale], for: modelEntity)
+            let gestures = arView.installGestures([.rotation, .scale], for: modelEntity)
             let furnitureWrapper = FurnitureWrapper(entity: modelEntity)
+            for wrapper in furnitureWrappers {
+                wrapper.isSelected = false
+            }
+            furnitureWrapper.isSelected = true
+            furnitureWrapper.movementMode = .horizontal
             furnitureWrapper.gestureRecognizers = gestures
+
             furnitureWrappers.append(furnitureWrapper)
 
             // Add an info box to the furniture
@@ -193,24 +220,83 @@ class ARViewController: UIViewController {
 
     @objc func handleTapGesture(_ sender: UITapGestureRecognizer) {
         let tapLocation = sender.location(in: arView)
-        if let tappedEntity = arView.entity(at: tapLocation) {
-            if let furnitureWrapper = furnitureWrappers.first(where: { $0.entity === tappedEntity }) {
-                if !furnitureWrapper.isLocked {
-                    furnitureWrapper.isLocked = true
-                    for gesture in furnitureWrapper.gestureRecognizers {
-                        arView.removeGestureRecognizer(gesture)
-                    }
-                    furnitureWrapper.gestureRecognizers.removeAll()
-                    print("\(furnitureWrapper.entity.name) locked")
-                } else {
-                    furnitureWrapper.isLocked = false
-                    let newGestures = arView.installGestures([.translation, .rotation, .scale], for: furnitureWrapper.entity)
-                    furnitureWrapper.gestureRecognizers = newGestures
-                    print("\(furnitureWrapper.entity.name) unlocked")
+        if let tappedEntity = arView.entity(at: tapLocation),
+           let tappedWrapper = furnitureWrappers.first(where: { $0.entity === tappedEntity }) {
+
+            // 🔁 Mark all as unselected first
+            for wrapper in furnitureWrappers {
+                wrapper.isSelected = false
+            }
+
+            // ✅ Select the one tapped
+            tappedWrapper.isSelected = true
+
+            if !tappedWrapper.isLocked {
+                tappedWrapper.isLocked = true
+                for gesture in tappedWrapper.gestureRecognizers {
+                    arView.removeGestureRecognizer(gesture)
                 }
+                tappedWrapper.gestureRecognizers.removeAll()
+                print("\(tappedWrapper.entity.name) locked")
+            } else {
+                tappedWrapper.isLocked = false
+                let newGestures = arView.installGestures([.rotation, .scale], for: tappedWrapper.entity)
+                tappedWrapper.gestureRecognizers = newGestures
+                print("\(tappedWrapper.entity.name) unlocked")
             }
         }
     }
+
+
+    
+    @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        guard let wrapper = furnitureWrappers.first(where: { $0.isSelected && !$0.isLocked }) else { return }
+
+        let location = sender.location(in: arView)
+        let translation = sender.translation(in: arView)
+        sender.setTranslation(.zero, in: arView) // Reset each cycle
+
+        var position = wrapper.entity.position
+
+        if wrapper.movementMode == .vertical {
+            // Freeform vertical dragging
+            let deltaY = Float(translation.y) * -0.004
+            position.y += deltaY
+        } else {
+            // Try raycast first
+            let results = arView.raycast(from: location, allowing: .existingPlaneGeometry, alignment: .horizontal)
+
+            if let result = results.first {
+                position.x = result.worldTransform.columns.3.x
+                position.z = result.worldTransform.columns.3.z
+            } else {
+                // Fallback: freeform dragging
+                let deltaX = Float(translation.x) * 0.004
+                let deltaZ = Float(translation.y) * 0.004
+                position.x += deltaX
+                position.z += deltaZ
+            }
+        }
+
+        wrapper.entity.position = position
+    }
+
+
+
+
+    @objc func toggleMovementMode() {
+        if let selectedWrapper = furnitureWrappers.first(where: { $0.isSelected }) {
+            selectedWrapper.movementMode = (selectedWrapper.movementMode == .horizontal) ? .vertical : .horizontal
+            print("🔄 \(selectedWrapper.entity.name) movement mode: \(selectedWrapper.movementMode == .horizontal ? "HORIZONTAL" : "VERTICAL")")
+        } else {
+            print("No selected object to toggle movement mode.")
+        }
+    }
+
+
+
+
+
 }
 
 extension ARViewController: FurnitureGalleryDelegate {

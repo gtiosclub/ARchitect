@@ -6,7 +6,7 @@ struct ARSessionView: View {
     @State private var scaleFactor: Float = 1.0
     @State private var arView = ARView(frame: .zero)
     @State private var selectedModel: String? // Track the selected model
-    let furnitureModels = ["GreyCouch", "modern chair"] // Available models
+    let furnitureModels = ["GreyCouch", "modern chair", "Folding_Table", "fridge"] // Available models
 
     var body: some View {
         HStack {
