@@ -6,88 +6,95 @@ struct FurnitureLibraryView: View {
     
     let categories = ["Projects", "Furniture"]
     let filters = [
+        ("Sofas", "sofa.fill"),
+        ("Lights", "lamp.floor.fill"),
+        ("Desks", "table.furniture.fill"),
         ("Chairs", "chair.fill"),
         ("Drawers", "archivebox.fill"),
-        ("Lights", "lightbulb.fill"),
-        ("Beds", "bed.double.fill"),
-        ("Sofas", "couch.fill"),
-        ("Desks", "desk.fill"),
-        ("Shelves", "books.vertical.fill")
     ]
     
     let recentItems: [FurnitureItem] = [
-        FurnitureItem(name: "Grey Couch", tags: ["Modern", "Grey"], imageName: "GreyCouch2D"),
-        FurnitureItem(name: "Green Sofa", tags: ["Contemporary", "Green"], imageName: "greenSofa"),
-        FurnitureItem(name: "Orange Couch", tags: ["L-Shaped", "Orange"], imageName: "OrangeCouch"),
-        FurnitureItem(name: "L-Shaped Grey Couch", tags: ["L-Shaped", "Grey"], imageName: "longGreyCouch"),
-        
-        
+        FurnitureItem(name: "Grey Couch", tags: ["Modern", "Grey"], imageName: "GreyCouch", category: "Sofas"),
+        FurnitureItem(name: "Chelsey Sofa", tags: ["Grey"], imageName: "ChelseyCouch", category: "Sofas"),
+        FurnitureItem(name: "Blue Couch", tags: ["Modern", "Blue"], imageName: "BlueCouch", category: "Sofas"),
+        FurnitureItem(name: "Dahlia Couch", tags: ["traditional", "small"], imageName: "DahliaCouch", category: "Sofas"),
+        FurnitureItem(name: "Leather Couch", tags: ["Leather", "brown"], imageName: "LeatherCouch", category: "Sofas"),
+        FurnitureItem(name: "Folding Couch", tags: ["Folding", "Green"], imageName: "FoldingCouch", category: "Sofas"),
+        FurnitureItem(name: "Orange Lamp", tags: ["Orange"], imageName: "Orange Lamp", category: "Lights"),
+        FurnitureItem(name: "Office Lamp", tags: ["Office", "Black"], imageName: "Office Lamp", category: "Lights"),
+        FurnitureItem(name: "Dining Table", tags: ["Dining", "wood"], imageName: "DiningTableWood", category: "Desks"),
+        FurnitureItem(name: "Dining Table Glass", tags: ["Dining", "glass"], imageName: "DiningTableGlass", category: "Desks"),
+        FurnitureItem(name: "Sci Fi Table", tags: ["Science", "steel"], imageName: "SciFiTable", category: "Desks"),
+        FurnitureItem(name: "Simple Dining Table", tags: ["Simple", "White"], imageName: "SimpleDiningTable", category: "Desks"),
+        FurnitureItem(name: "Office Table", tags: ["Office", "Wood"], imageName: "OfficeTable", category: "Desks"),
     ]
     
     var body: some View {
-        VStack {
-            // Recent Items
-            Text("Recent")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(recentItems.prefix(3)) { item in
-                        FurnitureCard(item: item)
+        NavigationView {
+            VStack {
+                // Recent Items
+                Text("Recent")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(recentItems.prefix(3)) { item in
+                            NavigationLink(destination: FurnitureDetailView(item: item)) {
+                                FurnitureCard(item: item)
+                                    .frame(width:150, height:200)
+                                    .foregroundColor(.black)
+                            }
+                            
+                        }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
-            
-            // Filters
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(filters, id: \.0) { filter in
-                        Button(action: { selectedFilter = filter.0 }) {
-                            VStack {
-                                Image(systemName: filter.1)
-                                    .font(.title2)
-                                    .foregroundColor(selectedFilter == filter.0 ? .white : .black)
-                                    .padding()
-                                    .background(selectedFilter == filter.0 ? Color.green : Color.gray.opacity(0.2))
-                                    .clipShape(Circle())
-                                
-                                Text(filter.0)
-                                    .font(.caption)
-                                    .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                
+                // Filters
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(filters, id: \.0) { filter in
+                            Button(action: { selectedFilter = filter.0 }) {
+                                VStack {
+                                    Image(systemName: filter.1)
+                                        .font(.title2)
+                                        .foregroundColor(selectedFilter == filter.0 ? .white : .black)
+                                        .padding()
+                                        .background(selectedFilter == filter.0 ? Color.green : Color.gray.opacity(0.2))
+                                        .clipShape(Circle())
+                                    
+                                    Text(filter.0)
+                                        .font(.caption)
+                                        .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                                }
                             }
                         }
                     }
-                }
-                .padding(.horizontal)
-            }
-            .padding()
-            
-            // Grid of Items
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(recentItems) { item in
-                        FurnitureCard(item: item)
-                    }
+                    .padding(.horizontal)
                 }
                 .padding()
+                
+                // Grid of Items
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                        ForEach(recentItems.filter { $0.category == selectedFilter }) { item in
+                            NavigationLink(destination: FurnitureDetailView(item: item)) {
+                                FurnitureCard(item: item)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    }
+
+                    .padding()
+                }
+                
             }
-            
-            // Bottom Navigation Bar
-//            HStack {
-//                BottomNavItem(icon: "house.fill")
-//                Spacer()
-//                BottomNavItem(icon: "plus.circle.fill")
-//                Spacer()
-//                BottomNavItem(icon: "doc.text.fill")
-//            }
-//            .background(Color.gray.opacity(0.2))
-//            .clipShape(Capsule())
-//            .padding(.horizontal)
         }
-    }
+            
+        }
+       
 }
 
 struct FurnitureItem: Identifiable {
@@ -95,6 +102,7 @@ struct FurnitureItem: Identifiable {
     let name: String
     let tags: [String]
     let imageName: String
+    let category: String
 }
 
 struct FurnitureCard: View {
@@ -119,6 +127,8 @@ struct FurnitureCard: View {
                 HStack {
                     ForEach(item.tags, id: \.self) { tag in
                         Text(tag)
+                        
+                        
                             .font(.caption)
                             .padding(4)
                             .background(Color.orange.opacity(0.8))

@@ -31,6 +31,19 @@
 		3169EAA72D5EC729003A836E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		3169EAA92D5EC729003A836E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		3169EAAB2D5EC729003A836E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		4BECD67F2DA4DC21001608DC /* GreyCouch.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6752DA4DC21001608DC /* GreyCouch.usdz */; };
+		4BECD6CA2DA4E2CD001608DC /* Simple_dining_table.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6C12DA4E2CD001608DC /* Simple_dining_table.usdz */; };
+		4BECD6CC2DA4E2CD001608DC /* office_lamp.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6BA2DA4E2CD001608DC /* office_lamp.usdz */; };
+		4BECD6CD2DA4E2CD001608DC /* Blue_Couch.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6B22DA4E2CD001608DC /* Blue_Couch.usdz */; };
+		4BECD6CE2DA4E2CD001608DC /* Dahlia_couch.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6B42DA4E2CD001608DC /* Dahlia_couch.usdz */; };
+		4BECD6CF2DA4E2CD001608DC /* Sci-Fi_Table.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6C02DA4E2CD001608DC /* Sci-Fi_Table.usdz */; };
+		4BECD6D02DA4E2CD001608DC /* Orange Lamp.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6B92DA4E2CD001608DC /* Orange Lamp.usdz */; };
+		4BECD6D32DA4E2CD001608DC /* Dining_Table_Glass.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6BD2DA4E2CD001608DC /* Dining_Table_Glass.usdz */; };
+		4BECD6D52DA4E2CD001608DC /* Dining_table_wood.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6BC2DA4E2CD001608DC /* Dining_table_wood.usdz */; };
+		4BECD6D62DA4E2CD001608DC /* Chelsey_Couch_2m.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6B02DA4E2CD001608DC /* Chelsey_Couch_2m.usdz */; };
+		4BECD6D72DA4E2CD001608DC /* Leather_couch.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6B52DA4E2CD001608DC /* Leather_couch.usdz */; };
+		4BECD6D82DA4E2CD001608DC /* Office_Table.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6C32DA4E2CD001608DC /* Office_Table.usdz */; };
+		4BECD6DB2DA4E888001608DC /* Folding_Couch.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 4BECD6DA2DA4E888001608DC /* Folding_Couch.usdz */; };
 		D4035BF82D94F900005608E5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D4035BF72D94F900005608E5 /* FirebaseAnalytics */; };
 		D4035BFA2D94F900005608E5 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = D4035BF92D94F900005608E5 /* FirebaseAnalyticsOnDeviceConversion */; };
 		D4035BFC2D94F900005608E5 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = D4035BFB2D94F900005608E5 /* FirebaseAnalyticsWithoutAdIdSupport */; };
@@ -77,6 +90,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4BECD6752DA4DC21001608DC /* GreyCouch.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = GreyCouch.usdz; sourceTree = "<group>"; };
+		4BECD6B02DA4E2CD001608DC /* Chelsey_Couch_2m.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Chelsey_Couch_2m.usdz; sourceTree = "<group>"; };
+		4BECD6B22DA4E2CD001608DC /* Blue_Couch.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Blue_Couch.usdz; sourceTree = "<group>"; };
+		4BECD6B42DA4E2CD001608DC /* Dahlia_couch.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Dahlia_couch.usdz; sourceTree = "<group>"; };
+		4BECD6B52DA4E2CD001608DC /* Leather_couch.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Leather_couch.usdz; sourceTree = "<group>"; };
+		4BECD6B92DA4E2CD001608DC /* Orange Lamp.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Orange Lamp.usdz"; sourceTree = "<group>"; };
+		4BECD6BA2DA4E2CD001608DC /* office_lamp.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = office_lamp.usdz; sourceTree = "<group>"; };
+		4BECD6BC2DA4E2CD001608DC /* Dining_table_wood.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Dining_table_wood.usdz; sourceTree = "<group>"; };
+		4BECD6BD2DA4E2CD001608DC /* Dining_Table_Glass.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Dining_Table_Glass.usdz; sourceTree = "<group>"; };
+		4BECD6C02DA4E2CD001608DC /* Sci-Fi_Table.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sci-Fi_Table.usdz"; sourceTree = "<group>"; };
+		4BECD6C12DA4E2CD001608DC /* Simple_dining_table.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Simple_dining_table.usdz; sourceTree = "<group>"; };
+		4BECD6C32DA4E2CD001608DC /* Office_Table.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Office_Table.usdz; sourceTree = "<group>"; };
+		4BECD6DA2DA4E888001608DC /* Folding_Couch.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Folding_Couch.usdz; sourceTree = "<group>"; };
 		7F5A3D6B2D52A675007BB24F /* ARchitect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARchitect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F5A3D7B2D52A677007BB24F /* ARchitectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARchitectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F5A3D852D52A677007BB24F /* ARchitectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARchitectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,9 +214,54 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4BECD6B82DA4E2CD001608DC /* couch */ = {
+			isa = PBXGroup;
+			children = (
+				4BECD6B02DA4E2CD001608DC /* Chelsey_Couch_2m.usdz */,
+				4BECD6B22DA4E2CD001608DC /* Blue_Couch.usdz */,
+				4BECD6B42DA4E2CD001608DC /* Dahlia_couch.usdz */,
+				4BECD6DA2DA4E888001608DC /* Folding_Couch.usdz */,
+				4BECD6B52DA4E2CD001608DC /* Leather_couch.usdz */,
+				4BECD6752DA4DC21001608DC /* GreyCouch.usdz */,
+			);
+			path = couch;
+			sourceTree = "<group>";
+		};
+		4BECD6BB2DA4E2CD001608DC /* lamp */ = {
+			isa = PBXGroup;
+			children = (
+				4BECD6B92DA4E2CD001608DC /* Orange Lamp.usdz */,
+				4BECD6BA2DA4E2CD001608DC /* office_lamp.usdz */,
+			);
+			path = lamp;
+			sourceTree = "<group>";
+		};
+		4BECD6C52DA4E2CD001608DC /* table */ = {
+			isa = PBXGroup;
+			children = (
+				4BECD6BC2DA4E2CD001608DC /* Dining_table_wood.usdz */,
+				4BECD6BD2DA4E2CD001608DC /* Dining_Table_Glass.usdz */,
+				4BECD6C02DA4E2CD001608DC /* Sci-Fi_Table.usdz */,
+				4BECD6C12DA4E2CD001608DC /* Simple_dining_table.usdz */,
+				4BECD6C32DA4E2CD001608DC /* Office_Table.usdz */,
+			);
+			path = table;
+			sourceTree = "<group>";
+		};
+		4BECD6C62DA4E2CD001608DC /* furniture */ = {
+			isa = PBXGroup;
+			children = (
+				4BECD6B82DA4E2CD001608DC /* couch */,
+				4BECD6BB2DA4E2CD001608DC /* lamp */,
+				4BECD6C52DA4E2CD001608DC /* table */,
+			);
+			path = furniture;
+			sourceTree = "<group>";
+		};
 		7F5A3D622D52A675007BB24F = {
 			isa = PBXGroup;
 			children = (
+				4BECD6C62DA4E2CD001608DC /* furniture */,
 				7F5A3D6D2D52A675007BB24F /* ARchitect */,
 				7F5A3D7E2D52A677007BB24F /* ARchitectTests */,
 				7F5A3D882D52A677007BB24F /* ARchitectUITests */,
@@ -358,6 +429,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BECD67F2DA4DC21001608DC /* GreyCouch.usdz in Resources */,
+				4BECD6CA2DA4E2CD001608DC /* Simple_dining_table.usdz in Resources */,
+				4BECD6CC2DA4E2CD001608DC /* office_lamp.usdz in Resources */,
+				4BECD6CD2DA4E2CD001608DC /* Blue_Couch.usdz in Resources */,
+				4BECD6CE2DA4E2CD001608DC /* Dahlia_couch.usdz in Resources */,
+				4BECD6CF2DA4E2CD001608DC /* Sci-Fi_Table.usdz in Resources */,
+				4BECD6D02DA4E2CD001608DC /* Orange Lamp.usdz in Resources */,
+				4BECD6D32DA4E2CD001608DC /* Dining_Table_Glass.usdz in Resources */,
+				4BECD6D52DA4E2CD001608DC /* Dining_table_wood.usdz in Resources */,
+				4BECD6D62DA4E2CD001608DC /* Chelsey_Couch_2m.usdz in Resources */,
+				4BECD6D72DA4E2CD001608DC /* Leather_couch.usdz in Resources */,
+				4BECD6D82DA4E2CD001608DC /* Office_Table.usdz in Resources */,
+				4BECD6DB2DA4E888001608DC /* Folding_Couch.usdz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
