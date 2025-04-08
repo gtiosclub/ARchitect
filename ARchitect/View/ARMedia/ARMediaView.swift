@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ARMediaView: View {
+    var fbVM = FirebaseViewModel.vm
     @State var posts: [Post] = [
         Post(
             username: "username",
@@ -28,6 +29,12 @@ struct ARMediaView: View {
             timeAgo: "10 days ago",
             likes: 100),
     ]
+    func populatePosts() async {
+        let allPosts = fbVM.getAllPosts();
+        DispatchQueue.main.async {
+            self.posts = allPosts;
+        }
+    }
     var body: some View {
         NavigationStack {
             VStack {

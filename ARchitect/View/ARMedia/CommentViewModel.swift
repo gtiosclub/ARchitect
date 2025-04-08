@@ -8,6 +8,7 @@
 import SwiftUI
 
 class CommentViewModel: ObservableObject {
+    var fbVM = FirebaseViewModel.vm
     @Published var comments: [Comment] = [
         Comment(text: "This is a test comment!", timestamp: Date(), publisher: "TestUser", likes: 0)
     ]
@@ -22,7 +23,12 @@ class CommentViewModel: ObservableObject {
         var likes: Int
         var isLiked: Bool = false
     }
-    
+    func populateComments(postId: String) async {
+        let allComments = await fbVM.getCommentsFromPost(postId: postId);
+        DispatchQueue.main.async {
+            self.comments = allComments["comments"];
+        }
+    }
     func addComment(text: String, publisher: String) {
         let newComment = Comment(text: text, timestamp: Date(), publisher: publisher, likes: 0)
         comments.append(newComment)
@@ -44,6 +50,9 @@ class CommentViewModel: ObservableObject {
     
     func length() -> Int {
         return comments.count
+    }
+    func addCommentToPost (comment: Comment) {
+        
     }
 }
 //class CommentViewModel: ObservableObject {
