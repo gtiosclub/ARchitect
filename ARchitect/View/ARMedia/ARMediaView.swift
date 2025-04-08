@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ARMediaView: View {
     @State var posts: [Post]
+    @State private var showSettings = false
     
     init() {
         //Firebase call gets all posts
@@ -37,11 +38,38 @@ struct ARMediaView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Text("ARchitect")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.top, 10)
-                
+                // Top Bar
+                HStack {
+                    HStack(spacing: 8) {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        
+                        Text("ARchitect")
+                            .font(.title)
+                            .fontWeight(.bold)
+                    }
+
+                    Spacer()
+
+                    Button(action: {
+                        showSettings.toggle()
+                    }) {
+                        Image(systemName: "line.3.horizontal")
+                            .resizable()
+                            .frame(width: 20, height: 15)
+                            .padding(6)
+                    }
+                    .sheet(isPresented: $showSettings) {
+                        Text("Settings go here")
+                            .font(.title)
+                            .padding()
+                    }
+
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+
                 ScrollView {
                     VStack(spacing: 20) {
                         ForEach(posts) { post in
@@ -79,6 +107,8 @@ struct SubARView: View {
                 Image(post.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .frame(height: 300)
+                    .frame(maxWidth: .infinity)
                     .cornerRadius(15)
                     .overlay(
                         // Gradient Overlay for Text Readability
