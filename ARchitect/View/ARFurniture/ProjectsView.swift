@@ -59,12 +59,12 @@ struct ProjectsView: View {
                             }) {
                                 Image(systemName: "person.circle.fill")
                                     .font(.title)
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                             }
                             Text("Hello, Steven!")
                                 .font(.headline)
                                 .fontWeight(.semibold)
-                                .foregroundColor(.primary)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                         }
                     }
                     
@@ -79,14 +79,14 @@ struct ProjectsView: View {
                         }) {
                             Image(systemName: "magnifyingglass")
                                 .font(.title2)
-                                .foregroundColor(.primary)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                         }
                         Button(action: {
                             // Cart or bag action
                         }) {
                             Image(systemName: "cart.fill")
                                 .font(.title2)
-                                .foregroundColor(.primary)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                         }
                     }
                 }
@@ -127,7 +127,7 @@ struct ProjectsView: View {
                         .font(.largeTitle)
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.primary)
+                        .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                         .padding(.horizontal)
                         .padding(.top, 16)
                 }
@@ -138,7 +138,7 @@ struct ProjectsView: View {
                         Text("Recent")
                             .font(.title3)
                             .fontWeight(.medium)
-                            .foregroundColor(.primary)
+                            .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                         Spacer()
                         HStack {
                             Button {
@@ -148,7 +148,7 @@ struct ProjectsView: View {
                                 Image(systemName: recentMode == .box ? "square.split.bottomrightquarter.fill" : "square.split.bottomrightquarter")
                                     .font(.title2)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                             }
                             Button {
                                 recentMode = .sofa
@@ -156,7 +156,7 @@ struct ProjectsView: View {
                                 Image(systemName: recentMode == .sofa ? "sofa.fill" : "sofa")
                                     .font(.title2)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255, opacity: 1.0))
                             }
                         }
                         .padding(.vertical, 7.5)
