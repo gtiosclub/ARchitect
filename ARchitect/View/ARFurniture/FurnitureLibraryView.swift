@@ -16,10 +16,10 @@ struct FurnitureLibraryView: View {
     ]
     
     let recentItems: [FurnitureItem] = [
-        FurnitureItem(name: "Grey Couch", tags: ["Modern", "Grey"], imageName: "GreyCouch2D"),
-        FurnitureItem(name: "Green Sofa", tags: ["Contemporary", "Green"], imageName: "greenSofa"),
-        FurnitureItem(name: "Orange Couch", tags: ["L-Shaped", "Orange"], imageName: "OrangeCouch"),
-        FurnitureItem(name: "L-Shaped Grey Couch", tags: ["L-Shaped", "Grey"], imageName: "longGreyCouch"),
+		FurnitureItem(name: "Grey Couch", type: "Chairs", tags: ["Modern", "Grey"], imageName: "GreyCouch2D"),
+		FurnitureItem(name: "Green Sofa", type: "Chairs", tags: ["Contemporary", "Green"], imageName: "greenSofa"),
+		FurnitureItem(name: "Orange Couch", type: "Chairs", tags: ["L-Shaped", "Orange"], imageName: "OrangeCouch"),
+		FurnitureItem(name: "L-Shaped Grey Couch", type: "Chairs", tags: ["L-Shaped", "Grey"], imageName: "longGreyCouch"),
         
         
     ]
@@ -90,12 +90,12 @@ struct FurnitureLibraryView: View {
     }
 }
 
-struct FurnitureItem: Identifiable {
-    let id = UUID()
-    let name: String
-    let tags: [String]
-    let imageName: String
-}
+//struct FurnitureItem: Identifiable {
+//    let id = UUID()
+//    let name: String
+//    let tags: [String]
+//    let imageName: String
+//}
 
 struct FurnitureCard: View {
     let item: FurnitureItem
