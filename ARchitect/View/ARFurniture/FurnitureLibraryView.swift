@@ -8,11 +8,11 @@ struct FurnitureLibraryView: View {
     let filters = [
         ("Chairs", "chair.fill"),
         ("Drawers", "archivebox.fill"),
-        ("Lights", "lightbulb.fill"),
+        ("Lights", "lamp.floor.fill"),
         ("Beds", "bed.double.fill"),
-        ("Sofas", "couch.fill"),
-        ("Desks", "desk.fill"),
-        ("Shelves", "books.vertical.fill")
+        ("Sofas", "sofa.fill"),
+        ("Desks", "table.furniture.fill"),
+        ("Shelves", "cabinet.fill")
     ]
     
     let recentItems: [FurnitureItem] = [
@@ -25,69 +25,70 @@ struct FurnitureLibraryView: View {
     ]
     
     var body: some View {
-        VStack {
-            // Recent Items
-            Text("Recent")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(recentItems.prefix(3)) { item in
-                        FurnitureCard(item: item)
+        NavigationView {
+            VStack {
+                // Recent Items
+                Text("Recent")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(recentItems.prefix(3)) { item in
+                            NavigationLink(destination: FurnitureDetailView(item: item)) {
+                                FurnitureCard(item: item)
+                                    .frame(width:150, height:200)
+                                    .foregroundColor(.black)
+                            }
+                            
+                        }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
-            
-            // Filters
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(filters, id: \.0) { filter in
-                        Button(action: { selectedFilter = filter.0 }) {
-                            VStack {
-                                Image(systemName: filter.1)
-                                    .font(.title2)
-                                    .foregroundColor(selectedFilter == filter.0 ? .white : .black)
-                                    .padding()
-                                    .background(selectedFilter == filter.0 ? Color.green : Color.gray.opacity(0.2))
-                                    .clipShape(Circle())
-                                
-                                Text(filter.0)
-                                    .font(.caption)
-                                    .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                
+                // Filters
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(filters, id: \.0) { filter in
+                            Button(action: { selectedFilter = filter.0 }) {
+                                VStack {
+                                    Image(systemName: filter.1)
+                                        .font(.title2)
+                                        .foregroundColor(selectedFilter == filter.0 ? .white : .black)
+                                        .padding()
+                                        .background(selectedFilter == filter.0 ? Color.green : Color.gray.opacity(0.2))
+                                        .clipShape(Circle())
+                                    
+                                    Text(filter.0)
+                                        .font(.caption)
+                                        .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                                }
                             }
                         }
                     }
-                }
-                .padding(.horizontal)
-            }
-            .padding()
-            
-            // Grid of Items
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(recentItems) { item in
-                        FurnitureCard(item: item)
-                    }
+                    .padding(.horizontal)
                 }
                 .padding()
+                
+                // Grid of Items
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                        ForEach(recentItems) { item in
+                            NavigationLink(destination: FurnitureDetailView(item: item)) {
+                                    FurnitureCard(item: item)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                
             }
-            
-            // Bottom Navigation Bar
-//            HStack {
-//                BottomNavItem(icon: "house.fill")
-//                Spacer()
-//                BottomNavItem(icon: "plus.circle.fill")
-//                Spacer()
-//                BottomNavItem(icon: "doc.text.fill")
-//            }
-//            .background(Color.gray.opacity(0.2))
-//            .clipShape(Capsule())
-//            .padding(.horizontal)
         }
-    }
+            
+        }
+       
 }
 
 struct FurnitureItem: Identifiable {
@@ -119,6 +120,8 @@ struct FurnitureCard: View {
                 HStack {
                     ForEach(item.tags, id: \.self) { tag in
                         Text(tag)
+                        
+                        
                             .font(.caption)
                             .padding(4)
                             .background(Color.orange.opacity(0.8))
