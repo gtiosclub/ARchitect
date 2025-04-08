@@ -34,6 +34,21 @@ class CommentViewModel: ObservableObject {
         comments.append(newComment)
     }
     
+    func addCommentToFirebase(comment: Comment, postId: String) async {
+        fbVM.addCommentToFirebase(comment: comment, postId: postId);
+    }
+    
+    func toggleLikeToFirebase(comment: Comment, postId: String) async {
+        if let index = comments.firstIndex(where: { $0.id == comment.id }) {
+            if comments[index].isLiked {
+                // Remove like
+                bVM.updateLikesForComment (postId: postId, commentId: comment.id, like: -1)
+            } else {
+                // Add like
+                bVM.updateLikesForComment (postId: postId, commentId: comment.id, like: 1)
+           
+    }
+    
     func toggleLike(for comment: Comment) {
         if let index = comments.firstIndex(where: { $0.id == comment.id }) {
             if comments[index].isLiked {
