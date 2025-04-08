@@ -1,54 +1,35 @@
-//
-//  ARFeedView.swift
-//  ARchitect
-//
-//  Created by Songyuan Liu on 2/4/25.
-//
-
 import SwiftUI
 
 struct ARFeedView: View {
-    @StateObject var sheetManager = SheetManager()
-    //    @State private var showingAlert = false
+    @State private var feedEntries: [FeedEntry] = FeedStorage.shared.load()
+
     var body: some View {
-        ZStack{
-            Color
-                .white
-                .ignoresSafeArea()
-            Rectangle()
-                .fill(Color.blue)
-                .frame(maxWidth: .infinity)
-                .frame(height: 300)
-                .overlay(
-                    Text("Tap here")
-                        .foregroundColor(.white)
+        NavigationView {
+            List(feedEntries.reversed()) { entry in
+                VStack(alignment: .leading, spacing: 8) {
+                    if let image = entry.image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .cornerRadius(10)
+                    }
+
+                    Text("Cubes in Scene:")
                         .font(.headline)
-                )
-                .gesture(
-                    TapGesture()
-                        .onEnded {
-                            withAnimation {
-                                sheetManager.present()
-                            }
-                        }
-                )
-        }
-        .overlay(alignment: .center){
-            if sheetManager.isPresented {
-                InformationPopUpView{
-                    withAnimation{
-                        sheetManager.dismiss()
+
+                    ForEach(entry.cubes) { cube in
+                        Text("• \(cube.colorName) at \(formatted(cube.position))")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
                 }
+                .padding(.vertical, 8)
             }
+            .navigationTitle("AR Feed")
         }
-        .ignoresSafeArea()
-        
     }
-}
 
-#Preview {
-    ARFeedView()
-        .environmentObject(SheetManager())
-
+    func formatted(_ position: SIMD3<Float>) -> String {
+        String(format: "(%.2f, %.2f, %.2f)", position.x, position.y, position.z)
+    }
 }

@@ -2,11 +2,38 @@ import SwiftUI
 import RealityKit
 import ARKit
 
+struct CubeInfo: Identifiable, Codable {
+    let id = UUID()
+    let colorName: String
+    let position: SIMD3<Float>
+}
+
+struct FeedEntry: Identifiable, Codable {
+    let id: UUID
+    let imageData: Data
+    let cubes: [CubeInfo]
+
+    var image: UIImage? {
+        UIImage(data: imageData)
+    }
+
+    init(image: UIImage, cubes: [CubeInfo]) {
+        self.id = UUID()
+        self.imageData = image.jpegData(compressionQuality: 0.8) ?? Data()
+        self.cubes = cubes
+    }
+}
+
+
 struct ARSessionView: View {
     @State private var scaleFactor: Float = 1.0
     @State private var arView = ARView(frame: .zero)
     @State private var showMenu = false
-    
+    @State private var placedCubes: [CubeInfo] = []
+    @State private var feedEntries: [FeedEntry] = FeedStorage.shared.load()
+
+
+
     let colors: [(name: String, color: UIColor)] = [
         ("Gray", .gray),
         ("Red", .red),
@@ -14,92 +41,127 @@ struct ARSessionView: View {
         ("Blue", .blue),
         ("Yellow", .yellow)
     ]
-    
+
     var body: some View {
-        ZStack {
-            ARViewContainer(arView: $arView, scaleFactor: $scaleFactor)
-                .edgesIgnoringSafeArea(.all)
-            
-            if showMenu {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Select Cube Color:")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.top, 10)
-                    
-                    ForEach(colors, id: \.name) { color in
-                        Button(action: {
-                            addCube(color: color.color)
-                        }) {
-                            HStack {
-                                Rectangle()
-                                    .fill(Color(color.color))
-                                    .frame(width: 40, height: 40)
-                                    .cornerRadius(8)
-                                
-                                Text(color.name)
-                                    .foregroundColor(.white)
-                                    .font(.body)
+        GeometryReader { geometry in
+            ZStack {
+                ARViewContainer(arView: $arView, scaleFactor: $scaleFactor)
+                    .edgesIgnoringSafeArea(.all)
+
+                if showMenu {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Select Cube Color:")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.top, 10)
+
+                        ForEach(colors, id: \.name) { color in
+                            Button(action: {
+                                addCube(color: color.color)
+                            }) {
+                                HStack {
+                                    Rectangle()
+                                        .fill(Color(color.color))
+                                        .frame(width: 40, height: 40)
+                                        .cornerRadius(8)
+
+                                    Text(color.name)
+                                        .foregroundColor(.white)
+                                        .font(.body)
+                                }
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color.black.opacity(0.5))
+                                .cornerRadius(10)
                             }
-                            .padding(10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.black.opacity(0.5))
-                            .cornerRadius(10)
                         }
+
+                        Spacer()
                     }
-                    
-                    Spacer()
-                }
-                .frame(width: 200)
-                .background(Color.black.opacity(0.8))
-                .cornerRadius(15)
-                .padding()
-                .transition(.move(edge: .leading))
-            }
-            
-            // Menu Button
-            Button(action: {
-                withAnimation {
-                    showMenu.toggle()
-                }
-            }) {
-                Image(systemName: "line.horizontal.3")
+                    .frame(width: 200)
+                    .background(Color.black.opacity(0.8))
+                    .cornerRadius(15)
                     .padding()
-                    .background(Color.white.opacity(0.8))
-                    .cornerRadius(8)
+                    .transition(.move(edge: .leading))
+                }
+
+                // Menu Button
+                Button(action: {
+                    withAnimation {
+                        showMenu.toggle()
+                    }
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .padding()
+                        .background(Color.white.opacity(0.8))
+                        .cornerRadius(8)
+                }
+                .position(x: 30, y: 50)
+
+                // Screenshot Button (higher position)
+                Button(action: {
+                    takeScreenshot()
+                }) {
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 60, height: 60)
+                        .shadow(radius: 4)
+                }
+                .position(
+                    x: geometry.size.width / 2,
+                    y: geometry.size.height - 140 // 👈 raised higher to avoid being cut off
+                )
             }
-            .position(x: 30, y: 50)
         }
     }
-    
+
     func addCube(color: UIColor) {
         let model = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: color, isMetallic: false)])
         model.name = "Cube"
-        model.position = [Float.random(in: -0.3...0.3), 0.05, Float.random(in: -0.3...0.3)]
+        let position = SIMD3<Float>(Float.random(in: -0.3...0.3), 0.05, Float.random(in: -0.3...0.3))
+        model.position = position
         model.generateCollisionShapes(recursive: true)
-        
+
         let infoBox = createInfoBox(color: color)
         infoBox.position = SIMD3<Float>(0, 0.12, 0)
         model.addChild(infoBox)
-        
+
         let anchor = AnchorEntity(plane: .horizontal)
         anchor.addChild(model)
         arView.scene.anchors.append(anchor)
+
+        // Record cube info
+        let cubeInfo = CubeInfo(colorName: color.accessibilityName, position: SIMD3(position))
+        placedCubes.append(cubeInfo)
     }
+
+
+    func takeScreenshot() {
+        arView.snapshot(saveToHDR: false) { image in
+            if let image = image {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+
+                // Save entry locally
+                let entry = FeedEntry(image: image, cubes: placedCubes)
+                feedEntries.append(entry)
+                FeedStorage.shared.save(entries: feedEntries)
+            }
+        }
+    }
+
 }
 
 struct ARViewContainer: UIViewRepresentable {
     @Binding var arView: ARView
     @Binding var scaleFactor: Float
-    
+
     func makeUIView(context: Context) -> ARView {
         let arConfiguration = ARWorldTrackingConfiguration()
         arConfiguration.planeDetection = [.horizontal]
         arView.session.run(arConfiguration)
-        
         return arView
     }
-    
+
     func updateUIView(_ uiView: ARView, context: Context) {
         for entity in uiView.scene.anchors.flatMap({ $0.children }) {
             if let model = entity as? ModelEntity {
@@ -121,23 +183,51 @@ func createInfoBox(color: UIColor) -> Entity {
     let textMaterial = SimpleMaterial(color: .black, isMetallic: false)
     let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
     textEntity.scale = SIMD3<Float>(0.5, 0.5, 0.5)
-    
+
     let textBounds = textMesh.bounds
     let textWidth = textBounds.max.x - textBounds.min.x
     let textHeight = textBounds.max.y - textBounds.min.y
-    
+
     let boxMesh = MeshResource.generateBox(size: [textWidth * 0.6, textHeight * 0.6, 0.01])
     let boxMaterial = SimpleMaterial(color: .white, isMetallic: false)
     let boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
     boxEntity.position = [0, 0, -0.005]
-    
+
     let textOffsetX = -textBounds.center.x * 0.5
     let textOffsetY = -textBounds.center.y * 0.5
     textEntity.position = [textOffsetX, textOffsetY, 0.005]
-    
+
     let infoBoxEntity = Entity()
     infoBoxEntity.addChild(boxEntity)
     infoBoxEntity.addChild(textEntity)
-    
+
     return infoBoxEntity
+}
+
+class FeedStorage {
+    static let shared = FeedStorage()
+    private let filename = "feed_entries.json"
+
+    private var fileURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(filename)
+    }
+
+    func save(entries: [FeedEntry]) {
+        do {
+            let data = try JSONEncoder().encode(entries)
+            try data.write(to: fileURL)
+        } catch {
+            print("Error saving feed: \(error)")
+        }
+    }
+
+    func load() -> [FeedEntry] {
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try JSONDecoder().decode([FeedEntry].self, from: data)
+        } catch {
+            print("Error loading feed: \(error)")
+            return []
+        }
+    }
 }
