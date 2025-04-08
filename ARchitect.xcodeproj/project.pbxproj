@@ -83,7 +83,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D4035C2D2D94FCBA005608E5 /* Exceptions for "ARchitect" folder in "ARchitect" target */ = {
+		8E67FC852DA4E3F100911C06 /* Exceptions for "ARchitect" folder in "ARchitect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -96,7 +96,7 @@
 		7F5A3D6D2D52A675007BB24F /* ARchitect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D4035C2D2D94FCBA005608E5 /* Exceptions for "ARchitect" folder in "ARchitect" target */,
+				8E67FC852DA4E3F100911C06 /* Exceptions for "ARchitect" folder in "ARchitect" target */,
 			);
 			path = ARchitect;
 			sourceTree = "<group>";
