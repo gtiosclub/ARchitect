@@ -51,7 +51,7 @@ struct ARFeedView: View {
                 // Hovering code
                 .gesture(
                     TapGesture().onEnded {
-                        if let selected = selectedEntity {
+                        if selectedEntity != nil {
                             // Changes if object is floating up or down
                             isHover.toggle()
                             selectedEntity = nil
