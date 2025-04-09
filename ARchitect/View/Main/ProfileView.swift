@@ -73,7 +73,7 @@ struct ProfileView: View {
 			if selectedColumn == 0 {
 				GeneralView()
 			} else {
-				ProjectsView()
+				//
 			}
 		}
 	}

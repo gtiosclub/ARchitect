@@ -1,20 +1,26 @@
-//
-//  GeneralView.swift
-//  ARchitect
-//
-//  Created by Ivan Li on 2/13/25.
-//
-
 import SwiftUI
 
-struct GeneralView: View {
-	var body: some View {
-		VStack {
-			Text("General Content")
-		}
-	}
+enum RecentMode {
+    case box
+    case sofa
 }
 
-#Preview {
-    GeneralView()
+struct GeneralView: View {
+    @State private var recentMode: RecentMode = .box
+
+    var body: some View {
+        NavigationStack {
+            if recentMode == .box {
+                ProjectsView(recentMode: $recentMode)
+            } else {
+                FurnitureLibraryView(recentMode: $recentMode)
+            }
+        }
+    }
+}
+
+struct GeneralView_Previews: PreviewProvider {
+    static var previews: some View {
+        GeneralView()
+    }
 }

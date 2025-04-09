@@ -9,7 +9,7 @@ import SwiftUI
 import RealityKit
 
 struct Furniture3DView: View {
-    let item: FurnitureItem  // Stores the furniture item to load its model
+    let item: Furniture  // Stores the furniture item to load its model
     @State private var anchor: AnchorEntity?  // Stores the RealityKit anchor
 
     var body: some View {

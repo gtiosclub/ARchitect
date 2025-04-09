@@ -21,12 +21,10 @@ struct FurnitureEntryView: View {
                 navigationHeader
                 
                 if selectedTab == "Projects" {
-                    ProjectsView()
+                    //
                 } else {
-                    FurnitureLibraryView()
+                    //
                 }
-                
-                   
             }
             .toolbar {
                 NavigationLink {

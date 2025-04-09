@@ -2,7 +2,7 @@ import SwiftUI
 import QuickLook
 
 struct FurnitureDetailView: View {
-    let item: FurnitureItem
+    let item: Furniture
     
     var body: some View {
         NavigationView {
@@ -52,6 +52,6 @@ struct FurnitureDetailView: View {
 
 struct FurnitureLibraryDetail_Previews: PreviewProvider {
     static var previews: some View {
-        FurnitureDetailView(item: FurnitureItem(name: "Grey Couch", tags: ["Modern", "Grey"], imageName: "GreyCouch2D"))
+        FurnitureDetailView(item: Furniture(name: "Grey Couch", tags: ["Modern", "Grey"], imageName: "GreyCouch2D", type: "couch"))
     }
 }
