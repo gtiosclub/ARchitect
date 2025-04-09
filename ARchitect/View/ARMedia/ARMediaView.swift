@@ -19,7 +19,6 @@ struct ARMediaView: View {
                 userImage: "person.circle.fill", // SF Symbol for user avatar
                 title: "1990 Vintage",
                 imageName: "ar_room1", // Replace with actual asset name
-                tags: ["vintage", "retro", "vibe"],
                 description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
                 timeAgo: "4 days ago",
                 likes: 120),
@@ -28,7 +27,6 @@ struct ARMediaView: View {
                 userImage: "person.circle.fill", // SF Symbol for user avatar
                 title: "Virtual Office",
                 imageName: "ar_room2", // Replace with actual asset name
-                tags: ["vintage", "retro"],
                 description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
                 timeAgo: "10 days ago",
                 likes: 100),
