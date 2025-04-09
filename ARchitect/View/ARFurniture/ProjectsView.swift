@@ -6,9 +6,7 @@ struct ProjectsView: View {
     @State private var selectedFilter: String = "All Projects"
     @State private var isSearchActive: Bool = false
     @State private var searchQuery: String = ""
-    
-    private let barColor = Color(red: 127/255, green: 109/255, blue: 95/255)
-    private let iconColor = Color(red: 222/255, green: 204/255, blue: 177/255)
+    @State private var isKeyboardVisible: Bool = false
     
     let projects = [
         Project(name: "Minimalistic", tags: ["Minimalistic"], isLocked: true),
@@ -25,7 +23,7 @@ struct ProjectsView: View {
     let furnitureFilters = ["All Furniture", "Favorites", "A-Z", "Private", "Public"]
     
     var body: some View {
-        ZStack {
+        ZStack (alignment: .bottom) {
             Color(red: 255/255, green: 242/255, blue: 223/255)
                 .ignoresSafeArea()
             
@@ -77,13 +75,18 @@ struct ProjectsView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.primary)
-                        TextField("Search projects", text: $searchQuery)
-                            .foregroundColor(.primary)
-                            .disableAutocorrection(true)
+                        TextField("Search projects", text: $searchQuery, onEditingChanged: { isEditing in
+                            withAnimation {
+                                isKeyboardVisible = isEditing
+                            }
+                        })
+                        .foregroundColor(.primary)
+                        .disableAutocorrection(true)
                         Button {
                             withAnimation {
                                 searchQuery = ""
                                 isSearchActive = false
+                                isKeyboardVisible = false
                             }
                         } label: {
                             Image(systemName: "xmark.circle.fill")
@@ -197,56 +200,11 @@ struct ProjectsView: View {
                     .padding([.horizontal, .bottom])
                     .padding(.top, 4)
                 }
-                
-                Spacer()
-                // Bottom Navigation Bar
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        // Home action
-                    }) {
-                        Image(systemName: "house.fill")
-                            .font(.title)
-                            .foregroundColor(iconColor)
-                    }
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    
-                    NavigationLink(destination: ARSessionView()) {
-                        Image(systemName: "plus.app.fill")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(iconColor)
-                    }
-                    
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Button(action: {
-                        // Third button action
-                    }) {
-                        Image(systemName: "newspaper.fill")
-                            .font(.title)
-                            .foregroundColor(iconColor)
-                    }
-                    Spacer()
+            }
+            if !isKeyboardVisible {
+                withAnimation {
+                    BottomNavigationBar()
                 }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 20)
-                .background(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(barColor)
-                )
-                .padding(.horizontal, 40)
-                .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
-                .ignoresSafeArea()
             }
         }
     }
