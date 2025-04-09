@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var isAuthenticated: Bool = false
+    @State private var isAuthenticated: Bool = true
     @State private var selectedTab = 0
     
     var body: some View {
@@ -22,15 +22,7 @@ struct MainView: View {
     }
     
     var tabController: some View {
-        TabView {
-            Tab("AR Furniture", systemImage: "camera.circle.fill") {
-                // FurnitureEntryView()
-            }
-            
-            Tab("AR Feed", systemImage: "figure.socialdance.circle") {
-                ARMediaView()
-            }
-        }
+        GeneralView()
     }
 }
 
