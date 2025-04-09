@@ -17,7 +17,7 @@ struct FurnitureEntryView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack (spacing: 0) {
                 navigationHeader
                 
                 if selectedTab == "Projects" {
@@ -37,6 +37,7 @@ struct FurnitureEntryView: View {
                 
             }
         }
+        .background(Color(hex: "#FFF2DF").edgesIgnoringSafeArea(.all))
         
     }
     
@@ -95,11 +96,12 @@ struct FurnitureEntryView: View {
                     }
                 }
             }
-            .padding(4)
-            .background(Color(.systemGray5))
-            .cornerRadius(25)
+            //.padding(4)
+            .background(Color(hex: "#FFF2DF"))
+            //.cornerRadius(25)
             .padding(.horizontal)
         }
+        .background(Color(hex: "#FFF2DF"))
     }
 }
 

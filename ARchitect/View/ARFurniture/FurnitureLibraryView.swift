@@ -60,7 +60,7 @@ struct FurnitureLibraryView: View {
     ]
     
     var body: some View {
-        NavigationView {
+      
             VStack {
                 // Recent Items
                 Text("Recent")
@@ -124,7 +124,7 @@ struct FurnitureLibraryView: View {
                 
             }
             .background(Color(hex: "#FFF2DF")) //set back ground
-        }
+        
             
         }
        
@@ -177,7 +177,6 @@ struct FurnitureCard: View {
         }
         .frame(width: 160)
         .background(Color(hex: "#FFF2DF"))
-        .cornerRadius(10)
         .shadow(radius: 3)
     }
 }
