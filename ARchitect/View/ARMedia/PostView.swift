@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostView: View {
-    @Binding var post: Post
+    @ObservedObject var post: Post
     @State private var showComments = false
     @State private var showMenuSheet = false
     @State private var showPopUp = false
@@ -17,13 +17,10 @@ struct PostView: View {
     let environment: VREnvironmentConfig
     let objects: [VREnvironmentConfig.VRObjectConfig]
     
-    init(post: Binding<Post>?, showComments: Bool = false) {
-        guard let unwrappedPost = post else {
-            fatalError("Post binding must not be nil")
-        }
-        let postID = unwrappedPost.id
+    init(post: Post, showComments: Bool = false) {
+        let postID = post.id
         
-        self._post = unwrappedPost
+        self.post = post
         self.showComments = showComments
         
         //Firebase call for getting an environment with just the post ID
@@ -87,12 +84,13 @@ struct PostView: View {
                         Text(post.description)
                             .font(.custom("SF Pro Display",size:16))
                             .padding(.horizontal,22)
-                        Text(post.timeAgo)
-                            .font(.custom("SF Pro Display",size:10))
+                        Spacer().frame(height: 10)
+                        Text(post.time_ago())
+                            .font(.custom("SF Pro Display",size:12))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.gray)
                             .padding(.horizontal,22)
-                        Spacer().frame(height: 40)
+                        Spacer().frame(height: 20)
                         //Featured
                         FeaturedInPost(objects: objects, showPopUp: $showPopUp, showPopUpIndex: $showPopUpIndex)
                     }
@@ -158,72 +156,11 @@ struct PostView: View {
             }
         }
         .sheet(isPresented: $showComments) {
-            ZStack{
-                Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
-                    .edgesIgnoringSafeArea(.all)
-                VStack{
-                    Spacer().frame(height: 5)
-                    .background(Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255))
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 40, height: 5)
-                        .padding(.top, 5)
-                    CommentSectionView(viewModel: $post.commentsModel)
-                        .presentationDetents([.medium, .large])                }
-                
-                .padding(.horizontal,20)
-            }
-            .presentationDetents([.fraction(0.8)])
-
+            CommentSectionView(viewModel: $post.commentsModel)
         }
         .sheet(isPresented: $showMenuSheet) {
-            ZStack{
-                Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
-                    .edgesIgnoringSafeArea(.all)
-                Spacer().frame(height: 5)
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 40, height: 5)
-                    .padding(.top, 5)
-                VStack() {
-                    Button {
-                        print("Option 1 tapped")
-                    } label: {
-                        Label("Share this post", systemImage: "square.and.arrow.up")
-                            .cornerRadius(10)
-                            .foregroundStyle(Color(.black))
-                    }
-                    Divider()
-                    Button {
-                        print("Option 2 tapped")
-                    } label: {
-                        Label("Hide this post", systemImage: "eye.slash")
-                            .cornerRadius(10)
-                            .foregroundStyle(Color(.black))
-                    }
-                    Divider()
-                    Button {
-                        print("Option 3 tapped")
-                    } label: {
-                        Label("Go to profile", systemImage: "person.circle")
-                            .cornerRadius(10)
-                            .foregroundStyle(Color(.black))
-                    }
-                }
-                .padding(.vertical, 10)
-                .background(Color(red: 102/255, green: 82/255, blue: 56/255,opacity: 0.31))
-                .cornerRadius(20)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.gray, lineWidth: 1))
-                .padding(20)
-                .presentationDetents([.fraction(0.3)])
-                .background(Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255))
-            }
-            
-            
-
-        }        
+            MenuSheet(post: post)
+        }
         
     }
 }
@@ -351,9 +288,8 @@ struct GalleryView: View {
         title: "1990 Vintage",
         imageName: "ar_room1",
         description: "Bold interior design project that revives the vibrant energy of the early '80s.",
-        timeAgo: "4 days ago",
         likes: 120
     )
     
-    PostView(post: $post)
+    PostView(post: post)
 }
