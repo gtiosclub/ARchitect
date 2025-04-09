@@ -1,5 +1,17 @@
 import SwiftUI
 
+extension Color {
+    init(hex: String) {
+        let hex = hex.replacingOccurrences(of: "#", with: "")
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+        let red = CGFloat((int >> 16) & 0xFF) / 255.0
+        let green = CGFloat((int >> 8) & 0xFF) / 255.0
+        let blue = CGFloat(int & 0xFF) / 255.0
+        self.init(red: red, green: green, blue: blue)
+    }
+}
+
 struct FurnitureLibraryView: View {
     @State private var selectedCategory = "Furniture"
     @State private var selectedFilter = "Chairs"
@@ -14,19 +26,37 @@ struct FurnitureLibraryView: View {
     ]
     
     let recentItems: [FurnitureItem] = [
+        //Couches
         FurnitureItem(name: "Grey Couch", tags: ["Modern", "Grey"], imageName: "GreyCouch", category: "Sofas"),
         FurnitureItem(name: "Chelsey Sofa", tags: ["Grey"], imageName: "ChelseyCouch", category: "Sofas"),
         FurnitureItem(name: "Blue Couch", tags: ["Modern", "Blue"], imageName: "BlueCouch", category: "Sofas"),
         FurnitureItem(name: "Dahlia Couch", tags: ["traditional", "small"], imageName: "DahliaCouch", category: "Sofas"),
         FurnitureItem(name: "Leather Couch", tags: ["Leather", "brown"], imageName: "LeatherCouch", category: "Sofas"),
         FurnitureItem(name: "Folding Couch", tags: ["Folding", "Green"], imageName: "FoldingCouch", category: "Sofas"),
+        
+        //Lamps
         FurnitureItem(name: "Orange Lamp", tags: ["Orange"], imageName: "Orange Lamp", category: "Lights"),
         FurnitureItem(name: "Office Lamp", tags: ["Office", "Black"], imageName: "Office Lamp", category: "Lights"),
+        
+        //Tables
         FurnitureItem(name: "Dining Table", tags: ["Dining", "wood"], imageName: "DiningTableWood", category: "Desks"),
         FurnitureItem(name: "Dining Table Glass", tags: ["Dining", "glass"], imageName: "DiningTableGlass", category: "Desks"),
         FurnitureItem(name: "Sci Fi Table", tags: ["Science", "steel"], imageName: "SciFiTable", category: "Desks"),
         FurnitureItem(name: "Simple Dining Table", tags: ["Simple", "White"], imageName: "SimpleDiningTable", category: "Desks"),
         FurnitureItem(name: "Office Table", tags: ["Office", "Wood"], imageName: "OfficeTable", category: "Desks"),
+        
+        //Chairs
+        FurnitureItem(name: "Living Room Chair", tags: ["Wooden", "Warm"], imageName: "Living Room Chair", category: "Chairs"),
+        FurnitureItem(name: "European Chair", tags: ["European", "Cream"], imageName: "European Chair", category: "Chairs"),
+        FurnitureItem(name: "Dublin Chair", tags: ["Leather", "Black"], imageName: "DublinChair", category: "Chairs"),
+        FurnitureItem(name: "Arm Chair", tags: ["Linen", "Grey"], imageName: "armChair", category: "Chairs"),
+        FurnitureItem(name: "Blue Chair", tags: ["Office", "Blue"], imageName: "blueChair", category: "Chairs"),
+        
+        //Drawers
+        FurnitureItem(name: "Wooden Drawer", tags: ["Nighstand", "Wooden"], imageName: "Wooden Drawer", category: "Drawers"),
+       
+        
+        
     ]
     
     var body: some View {
@@ -37,9 +67,10 @@ struct FurnitureLibraryView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
+                    .padding(.bottom, 1)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
+                    HStack(spacing: 30) {
                         ForEach(recentItems.prefix(3)) { item in
                             NavigationLink(destination: FurnitureDetailView(item: item)) {
                                 FurnitureCard(item: item)
@@ -60,9 +91,10 @@ struct FurnitureLibraryView: View {
                                 VStack {
                                     Image(systemName: filter.1)
                                         .font(.title2)
-                                        .foregroundColor(selectedFilter == filter.0 ? .white : .black)
+                                        .foregroundColor(selectedFilter == filter.0 ? .white : Color(hex: "#3E2A47") //dark brown for filter icon
+)
                                         .padding()
-                                        .background(selectedFilter == filter.0 ? Color.green : Color.gray.opacity(0.2))
+                                        .background(selectedFilter == filter.0 ? Color.brown : Color.gray.opacity(0.2))
                                         .clipShape(Circle())
                                     
                                     Text(filter.0)
@@ -91,6 +123,7 @@ struct FurnitureLibraryView: View {
                 }
                 
             }
+            .background(Color(hex: "#FFF2DF")) //set back ground
         }
             
         }
@@ -143,7 +176,7 @@ struct FurnitureCard: View {
             .padding(.horizontal)
         }
         .frame(width: 160)
-        .background(Color.white)
+        .background(Color(hex: "#FFF2DF"))
         .cornerRadius(10)
         .shadow(radius: 3)
     }

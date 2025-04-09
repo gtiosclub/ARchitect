@@ -12,6 +12,18 @@ struct FurnitureDetailView: View {
                     .scaledToFit()
                     .frame(width: 250, height: 250)
                 
+                
+                HStack {
+                        ForEach(item.tags, id: \.self) { tag in
+                            Text(tag)
+                                .font(.headline)
+                                .padding(6)
+                                .background(Color.orange.opacity(0.8))
+                                .cornerRadius(5)
+                        }
+                    }
+                .padding(.top, 8)
+                
                 Spacer()
                 
                 Text(item.name)
@@ -35,20 +47,6 @@ struct FurnitureDetailView: View {
     }
 }
 
-// actual VR view
-//struct Furniture3DView: View {
-//    let item: FurnitureItem
-//    
-//    var body: some View {
-//        VStack {
-//            Text("This is a placeholder")
-//                .font(.largeTitle)
-//                .padding()
-//            Spacer()
-//        }
-//        .navigationTitle("3D View")
-//    }
-//}
 
 struct FurnitureLibraryDetail_Previews: PreviewProvider {
     static var previews: some View {
