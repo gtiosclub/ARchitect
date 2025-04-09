@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var isAuthenticated: Bool = true
+    @State private var isAuthenticated: Bool = false
     @State private var selectedTab = 0
     
     var body: some View {
