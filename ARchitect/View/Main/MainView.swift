@@ -22,7 +22,15 @@ struct MainView: View {
     }
     
     var tabController: some View {
-        GeneralView()
+        TabView {
+            Tab("AR Furniture", systemImage: "camera.circle.fill") {
+                FurnitureEntryView()
+            }
+            
+            Tab("AR Feed", systemImage: "figure.socialdance.circle") {
+                ARMediaView()
+            }
+        }
     }
 }
 

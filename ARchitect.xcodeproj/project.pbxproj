@@ -83,7 +83,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		8E67FC852DA4E3F100911C06 /* Exceptions for "ARchitect" folder in "ARchitect" target */ = {
+		D4035C2D2D94FCBA005608E5 /* Exceptions for "ARchitect" folder in "ARchitect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -96,7 +96,7 @@
 		7F5A3D6D2D52A675007BB24F /* ARchitect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				8E67FC852DA4E3F100911C06 /* Exceptions for "ARchitect" folder in "ARchitect" target */,
+				D4035C2D2D94FCBA005608E5 /* Exceptions for "ARchitect" folder in "ARchitect" target */,
 			);
 			path = ARchitect;
 			sourceTree = "<group>";
@@ -542,7 +542,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ARchitect/Preview Content\"";
-				DEVELOPMENT_TEAM = K995CAS64M;
+				DEVELOPMENT_TEAM = 776H4R3X7K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ARchitect/Info.plist;
@@ -559,7 +559,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = IOSClub.ARchitectRonit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhairyapatel.Architect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -580,7 +580,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ARchitect/Preview Content\"";
-				DEVELOPMENT_TEAM = K995CAS64M;
+				DEVELOPMENT_TEAM = 776H4R3X7K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ARchitect/Info.plist;
@@ -597,7 +597,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = IOSClub.ARchitectRonit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhairyapatel.Architect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
