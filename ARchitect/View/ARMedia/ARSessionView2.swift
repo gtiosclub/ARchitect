@@ -32,10 +32,10 @@ struct ARSessionView2: View {
             )
             
             if showInfoPanel, let objectInfo = selectedObjectInfo {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Text(objectInfo.displayName)
-                            .font(.headline)
+                            .font(.body)
                             .fontWeight(.bold)
                         
                         Spacer()
@@ -57,8 +57,8 @@ struct ARSessionView2: View {
                     }
                     
                     Text(objectInfo.description)
-                        .font(.body)
-                        .padding(.vertical, 8)
+                        .font(.footnote)
+                        .padding(.vertical, 4)
                     
                     if !objectInfo.properties.isEmpty {
                         Divider()
@@ -67,25 +67,25 @@ struct ARSessionView2: View {
                             if let value = objectInfo.properties[key] {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(key)
-                                        .font(.subheadline)
+                                        .font(.footnote)
                                         .fontWeight(.semibold)
                                     
                                     Text(value)
-                                        .font(.body)
+                                        .font(.caption)
                                 }
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 2)
                             }
                         }
                     }
                 }
                 .padding()
-                .frame(width: 280, height: 300)
+                .frame(width: 180, height: 200)
                 .background(Color.white)
                 .foregroundColor(Color.black)
                 .cornerRadius(10)
                 .shadow(radius: 5)
                 .padding()
-                .position(x: UIScreen.main.bounds.width - 160, y: 160)
+                .offset(x: 100, y: 0)
                 .transition(.scale.combined(with: .opacity))
             }
         }

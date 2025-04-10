@@ -76,6 +76,7 @@ struct PostView: View {
                         
                         ARSessionView2(config: environment)
                             .aspectRatio(16/9, contentMode: .fit)
+                            .frame(maxWidth: .infinity)
                             .cornerRadius(12)
                             .padding(.horizontal, 22)
                         
