@@ -85,7 +85,7 @@ struct ARSessionView2: View {
                 .cornerRadius(10)
                 .shadow(radius: 5)
                 .padding()
-                .offset(x: 100, y: 0)
+                .offset(x: 80, y: 0)
                 .transition(.scale.combined(with: .opacity))
             }
         }

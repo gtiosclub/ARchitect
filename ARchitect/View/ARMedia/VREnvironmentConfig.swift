@@ -55,7 +55,7 @@ struct VREnvironmentConfig: Identifiable {
             ),
             VRObjectConfig(
                 modelName: "GreyCouch",
-                filter: "Drawers",
+                filter: "Sofas",
                 displayName: "Grey Couch",
                 description: "Comfortable grey couch for modern living rooms.",
                 position: SIMD3<Float>(0.3, -2.5, -2),
