@@ -7,7 +7,8 @@ struct FurnitureLibraryView: View {
     @State private var isSearchActive: Bool = false
     @State private var searchQuery: String = ""
     @State private var isKeyboardVisible: Bool = false
-        
+    @State private var selectedFurniture: Furniture? = nil
+
     let filters = [
         ("Chairs", "chair.fill"),
         ("Drawers", "archivebox.fill"),
@@ -25,6 +26,13 @@ struct FurnitureLibraryView: View {
         Furniture(name: "L-Shaped Grey Couch", tags: ["L-Shaped", "Grey"], imageName: "longGreyCouch", type: "sofa")
     ]
     
+    let sampleRelatedItems: [(String, String)] = [
+        ("Rond table", "rondTableImage"), // <– Replace with real asset name
+        ("Chaich", "chaichImage"),
+        ("Parson Chair", "parsonChairImage")
+    ]
+
+    
     // Mapping from filter title to furniture type used for filtering.
     private var filterMapping: [String: String] {
         return [
@@ -39,7 +47,7 @@ struct FurnitureLibraryView: View {
     }
     
     var body: some View {
-        ZStack (alignment: .bottom) {
+        ZStack(alignment: .bottom) {
             Color(red: 255/255, green: 242/255, blue: 223/255)
                 .ignoresSafeArea()
             
@@ -135,7 +143,9 @@ struct FurnitureLibraryView: View {
                         HStack {
                             // Box button switches to ProjectsView
                             Button {
-                                recentMode = .box
+                                withAnimation {
+                                    recentMode = .box
+                                }
                             } label: {
                                 Image(systemName: "square.split.bottomrightquarter")
                                     .font(.title2)
@@ -144,7 +154,9 @@ struct FurnitureLibraryView: View {
                             }
                             // Sofa button remains active in Furniture view
                             Button {
-                                recentMode = .sofa
+                                withAnimation {
+                                    recentMode = .sofa
+                                }
                             } label: {
                                 Image(systemName: "sofa.fill")
                                     .font(.title2)
@@ -168,27 +180,31 @@ struct FurnitureLibraryView: View {
                             ForEach(recentItems.prefix(3), id: \.id) { furniture in
                                 FurnitureCard(furniture: furniture)
                                     .frame(width: 123, height: 212)
+                                    .onTapGesture {
+                                        withAnimation {
+                                            selectedFurniture = furniture
+                                        }
+                                    }
                             }
                         }
                         .padding(.horizontal)
                     }
                     
-                    // Filters row with both icon and text
+                    // Filters row with circular icons and labels
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 24) {  // Adjust spacing as needed
+                        HStack(spacing: 24) {
                             ForEach(filters, id: \.0) { filter in
                                 Button(action: {
                                     selectedFilter = filter.0
                                 }) {
-                                    VStack(spacing: 6) { // Vertical spacing between icon and text
-                                        // Circular background
+                                    VStack(spacing: 6) {
                                         Circle()
                                             .fill(
                                                 selectedFilter == filter.0
-                                                ? Color(red: 99/255, green: 83/255, blue: 70/255)  // Darker for selected
-                                                : Color(red: 236/255, green: 216/255, blue: 189/255) // Lighter for unselected
+                                                ? Color(red: 99/255, green: 83/255, blue: 70/255)
+                                                : Color(red: 236/255, green: 216/255, blue: 189/255)
                                             )
-                                            .frame(width: 56, height: 56)  // Adjust circle size
+                                            .frame(width: 56, height: 56)
                                             .overlay(
                                                 Image(systemName: filter.1)
                                                     .font(.title2)
@@ -198,8 +214,6 @@ struct FurnitureLibraryView: View {
                                                         : Color(red: 99/255, green: 83/255, blue: 70/255)
                                                     )
                                             )
-                                        
-                                        // Label beneath the circle
                                         Text(filter.0)
                                             .font(.subheadline)
                                             .fontWeight(selectedFilter == filter.0 ? .bold : .regular)
@@ -212,11 +226,16 @@ struct FurnitureLibraryView: View {
                     }
                     .padding(.top, 12)
                     
-                    // Main grid of furniture items after applying filters and search query
+                    // Main grid of furniture items after filtering and search query
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         ForEach(filteredFurniture(), id: \.id) { furniture in
                             FurnitureCard(furniture: furniture)
                                 .frame(width: 173, height: 188)
+                                .onTapGesture {
+                                    withAnimation {
+                                        selectedFurniture = furniture
+                                    }
+                                }
                         }
                     }
                     .padding([.horizontal, .bottom])
@@ -227,6 +246,109 @@ struct FurnitureLibraryView: View {
                 withAnimation {
                     BottomNavigationBar()
                 }
+            }
+            
+            // Black popup overlay when a furniture item is selected.
+            if let selectedFurniture = selectedFurniture {
+                ZStack {
+                    // Dark, translucent background behind the card
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            // Close popup if user taps outside the card
+                            withAnimation {
+                                self.selectedFurniture = nil
+                            }
+                        }
+                    
+                    // The popup card
+                    VStack(alignment: .leading, spacing: 16) {
+                        
+                        // Close button at top-right
+                        HStack {
+                            Spacer()
+                            Button {
+                                withAnimation {
+                                    self.selectedFurniture = nil
+                                }
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .resizable()
+                                    .frame(width: 28, height: 28)
+                                    .foregroundColor(Color.gray.opacity(0.6))
+                            }
+                        }
+                        
+                        // Main item image
+                        // Replace furniture.imageName with your actual asset name if needed.
+                        Image(selectedFurniture.imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 200)         // Adjust to your preference
+                            .frame(height: 160)          // Example height
+                            .cornerRadius(12)
+                            .padding(.top, -12)          // Pulls image up a bit if desired
+                        
+                        // Title and short description
+                        Text(selectedFurniture.name)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                        
+                        Text("A modern dining chair with wooden legs and a grey seat. Looks great in any contemporary dining space.")
+                            .font(.subheadline)
+                            .foregroundColor(.black.opacity(0.8))
+                            .lineLimit(nil)
+                        
+                        // “Related Items” header
+                        Text("Related Items")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.top, 8)
+                        
+                        // Related items row (example placeholders)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                // Replace with your real “related items” data
+                                ForEach(sampleRelatedItems, id: \.0) { relatedItem in
+                                    VStack(spacing: 4) {
+                                        // Placeholder image or real image
+                                        Image(relatedItem.1)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 60, height: 60)
+                                            .cornerRadius(6)
+                                        
+                                        Text(relatedItem.0)
+                                            .font(.caption)
+                                            .foregroundColor(.black)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        NavigationLink(destination: Furniture3DView(item: selectedFurniture)) {
+                            Text("View in AR")
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                                .padding(.vertical, 12)
+                                .frame(maxWidth: .infinity)
+                                .background(Color(red: 99/255, green: 83/255, blue: 70/255))
+                                .cornerRadius(12)
+                        }
+                        .padding(.top, 8)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            // Matches your overall beige scheme:
+                            .fill(Color(red: 255/255, green: 242/255, blue: 223/255))
+                    )
+                    .frame(width: 320) // Adjust card width to suit your design
+                    .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
+                    .padding(.horizontal, 16)
+                }
+                .transition(.opacity)  // Fade in/out transition
             }
         }
     }
@@ -246,7 +368,7 @@ struct FurnitureLibraryView: View {
     }
 }
 
-// MARK: - Model and Card for Furniture
+// MARK: - Model and Card
 struct Furniture: Identifiable {
     let id = UUID()
     let name: String
@@ -280,12 +402,14 @@ struct FurnitureCard: View {
                             .background(Color(red: 206/255, green: 135/255, blue: 35/255))
                             .foregroundColor(.white)
                             .cornerRadius(12)
+                            .lineLimit(1)
                     }
                 }
                 Text(furniture.name)
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
+                    .lineLimit(1)
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)

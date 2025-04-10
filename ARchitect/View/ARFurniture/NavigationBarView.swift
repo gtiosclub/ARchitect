@@ -19,8 +19,8 @@ struct BottomNavigationBar: View {
             // Home Button
             NavigationLink(destination: GeneralView().navigationBarBackButtonHidden(true)) {
                 Image(systemName: "house.fill")
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .font(.title2)
+                    .fontWeight(.semibold)
                     .foregroundColor(iconColor)
             }
             
@@ -34,8 +34,8 @@ struct BottomNavigationBar: View {
             // Plus Button opens the AR session view (using NavigationLink)
             NavigationLink(destination: ARSessionView()) {
                 Image(systemName: "plus.app.fill")
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .font(.title2)
+                    .fontWeight(.semibold)
                     .foregroundColor(iconColor)
             }
             
@@ -51,7 +51,8 @@ struct BottomNavigationBar: View {
                 // Third button action implementation
             }) {
                 Image(systemName: "newspaper.fill")
-                    .font(.title)
+                    .font(.title2)
+                    .fontWeight(.semibold)
                     .foregroundColor(iconColor)
             }
             

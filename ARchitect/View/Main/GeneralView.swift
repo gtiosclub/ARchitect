@@ -16,6 +16,7 @@ struct GeneralView: View {
                 FurnitureLibraryView(recentMode: $recentMode)
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
