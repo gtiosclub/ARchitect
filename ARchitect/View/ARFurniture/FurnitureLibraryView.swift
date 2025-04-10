@@ -25,7 +25,7 @@ struct FurnitureLibraryView: View {
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 // Recent Items
                 Text("Recent")

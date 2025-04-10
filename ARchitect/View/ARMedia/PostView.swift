@@ -94,51 +94,47 @@ struct PostView: View {
                         //Featured
                         FeaturedInPost(objects: objects, showPopUp: $showPopUp, showPopUpIndex: $showPopUpIndex)
                     }
-                    ZStack {
-                        // Other content, such as background and ScrollView
-
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(.sRGB,red: 99/255, green: 83/255, blue: 70/255))
-                            .frame(width: 362, height: 64)
-                            .padding(.horizontal, 20)
-//                            .zIndex(1)
-                            .background(Color.clear)
-                            .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
-                        HStack{
-                            Button {
-                                post.user_liked.toggle()
-                                post.likes += post.user_liked ? 1 : -1
-                                
-                            } label: {
-                                   Image(systemName: post.user_liked ? "heart.fill" : "heart")
-                                    .font(.custom("SF Pro Display",size:24))
-                                    .foregroundColor(post.user_liked ? .red : .white)
-                               }
+                    HStack {
+                        Button {
+                            post.user_liked.toggle()
+                            post.likes += post.user_liked ? 1 : -1
                             
-                            Spacer()
-                            
-                            Button {
-                                showComments = true
-                            } label: {
-                                   Image(systemName: "bubble.left")
-                                    .font(.custom("SF Pro Display",size:24))
-                                       .foregroundColor(.white)
-                               }
-                            Spacer()
-                            
-                            Button {
-                                showMenuSheet = true
-                            } label: {
-                               Image(systemName: "square.and.arrow.up")
+                        } label: {
+                               Image(systemName: post.user_liked ? "heart.fill" : "heart")
+                                .font(.custom("SF Pro Display",size:24))
+                                .foregroundColor(post.user_liked ? .red : .white)
+                           }
+                        
+                        Spacer()
+                        
+                        Button {
+                            showComments = true
+                        } label: {
+                               Image(systemName: "bubble.left")
                                 .font(.custom("SF Pro Display",size:24))
                                    .foregroundColor(.white)
-                            }
-                        }
-                        .padding(.horizontal, 60) // Adds 20 margin to both sides of the HStack
-                        .frame(maxWidth: .infinity)
+                           }
+                        Spacer()
                         
-                    
+                        Button {
+                            showMenuSheet = true
+                        } label: {
+                           Image(systemName: "square.and.arrow.up")
+                            .font(.custom("SF Pro Display",size:24))
+                               .foregroundColor(.white)
+                        }
                     }
+                    .padding(.horizontal, 60)
+                    .frame(width: 362, height: 64)
+                    .background(
+                        Color(.sRGB, red: 99/255, green: 83/255, blue: 70/255)
+                            .cornerRadius(20)
+                    )
+                    .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
+                    .frame(maxWidth: .infinity)
+                        
+                        
+                
                     
                 
                 }
