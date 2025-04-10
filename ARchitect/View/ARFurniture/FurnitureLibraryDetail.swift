@@ -5,7 +5,7 @@ struct FurnitureDetailView: View {
     let item: FurnitureItem
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Image(item.imageName)
                     .resizable()
