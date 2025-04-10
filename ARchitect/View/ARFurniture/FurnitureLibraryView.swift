@@ -13,8 +13,13 @@ extension Color {
 }
 
 struct FurnitureLibraryView: View {
+    @Binding var searchText: String //search string
+    
     @State private var selectedCategory = "Furniture"
     @State private var selectedFilter = "Chairs"
+    
+    @State private var selectedItem: FurnitureItem?
+    @State private var isDetailedView = false;
     
     let categories = ["Projects", "Furniture"]
     let filters = [
@@ -164,14 +169,17 @@ struct FurnitureCard: View {
                         
                             .font(.caption)
                             .padding(4)
+                            .foregroundColor(Color(hex: "#FFF2DF"))
                             .background(Color.orange.opacity(0.8))
                             .cornerRadius(5)
                     }
                 }
                 
                 Text(item.name)
-                    .font(.headline)
+                    .font(.system(.body, design: .rounded))
                     .bold()
+                    .foregroundColor(Color(hex: "#635346"))
+
             }
             .padding(.horizontal)
         }
@@ -193,7 +201,9 @@ struct BottomNavItem: View {
 }
 
 struct HomeView_Previews: PreviewProvider {
+    @State static var placeHolderSearchText = ""
+
     static var previews: some View {
-        FurnitureLibraryView()
+        FurnitureLibraryView(searchText: $placeHolderSearchText)
     }
 }

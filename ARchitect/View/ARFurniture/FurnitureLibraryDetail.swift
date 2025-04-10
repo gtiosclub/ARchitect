@@ -44,6 +44,9 @@ struct FurnitureDetailView: View {
             .padding()
             .navigationTitle("Furniture Details")
         }
+        .background(Color(hex: "#FFF2DF"))
+        .edgesIgnoringSafeArea(.all)
+
     }
 }
 

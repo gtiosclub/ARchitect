@@ -23,7 +23,7 @@ struct FurnitureEntryView: View {
                 if selectedTab == "Projects" {
                     ProjectsView()
                 } else {
-                    FurnitureLibraryView()
+                    FurnitureLibraryView(searchText: $searchText)
                 }
                 
                    
@@ -47,6 +47,8 @@ struct FurnitureEntryView: View {
                 Text("Home")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundColor(Color(hex: "#635346"))
+                    
                 
                 // Search bar
                 HStack {
@@ -59,7 +61,7 @@ struct FurnitureEntryView: View {
                         .foregroundColor(.gray)
                 }
                 .padding(8)
-                .background(Color(.systemGray5))
+                .background(Color(hex: "#ECD8BD"))
                 .cornerRadius(10)
             }
             .padding(.horizontal)
@@ -83,15 +85,17 @@ struct FurnitureEntryView: View {
                             
                             Text(tab)
                                 .fontWeight(.semibold)
+                                .foregroundColor(Color(hex: "#635346"))
                         }
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .foregroundColor(selectedTab == tab ? .white : .black)
+                        .foregroundColor(selectedTab == tab ? Color(hex: "#635346") : Color(hex: "#635346"))
                         .background(
                             RoundedRectangle(cornerRadius: 25)
                                 .fill(selectedTab == tab ?
-                                      Color(red: 0.35, green: 0.45, blue: 0.35) :
-                                        Color.clear)
+                                    Color(hex: "#ECD8BD") : // Updated color
+                                    Color.clear)
+
                         )
                     }
                 }
