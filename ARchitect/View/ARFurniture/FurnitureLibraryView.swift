@@ -27,60 +27,238 @@ struct FurnitureLibraryView: View {
         Furniture(name: "modern chair", tags: ["Grey"], imageName: "longGreyCouch", type: "chair")
     ]
     
+    let sampleRelatedItems: [(String, String)] = [
+        ("Rond table", "rondTableImage"), // <– Replace with real asset name
+        ("Chaich", "chaichImage"),
+        ("Parson Chair", "parsonChairImage")
+    ]
+
+    
+    // Mapping from filter title to furniture type used for filtering.
+    private var filterMapping: [String: String] {
+        return [
+            "Chairs": "chair",
+            "Drawers": "drawer",
+            "Lights": "light",
+            "Beds": "bed",
+            "Sofas": "sofa",
+            "Desks": "desk",
+            "Shelves": "shelf"
+        ]
+    }
+    
     var body: some View {
-        NavigationStack {
-            VStack {
-                // Recent Items
-                Text("Recent")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(recentItems.prefix(3)) { item in
-                            NavigationLink(destination: FurnitureDetailView(item: item)) {
-                                FurnitureCard(item: item)
-                                    .frame(width:150, height:200)
-                                    .foregroundColor(.black)
+        ZStack(alignment: .bottom) {
+            Color(red: 255/255, green: 242/255, blue: 223/255)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                Spacer()
+                Spacer()
+                Spacer()
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Button(action: {
+                                // Profile/user action
+                            }) {
+                                Image(systemName: "person.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
                             }
-                            
+                            Text("Hello, Steven!")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
                         }
                     }
+                    Spacer()
+                    // Right icons
+                    HStack(spacing: 20) {
+                        Button(action: {
+                            withAnimation {
+                                isSearchActive.toggle()
+                            }
+                        }) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.title2)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                        }
+                        Button(action: {
+                            // Cart action
+                        }) {
+                            Image(systemName: "cart.fill")
+                                .font(.title2)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                        }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                
+                if isSearchActive {
+                    HStack(spacing: 8) {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.primary)
+                        TextField("Search projects", text: $searchQuery)
+                            .foregroundColor(.primary)
+                            .disableAutocorrection(true)
+                        Button {
+                            withAnimation {
+                                searchQuery = ""
+                                isSearchActive = false
+                            }
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .padding(10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color(red: 236/255, green: 216/255, blue: 189/255))
+                    )
                     .padding(.horizontal)
+                    .padding(.top, 8)
                 }
                 
-                // Filters
-                ScrollView(.horizontal, showsIndicators: false) {
+                // Big Title
+                HStack {
+                    Text("Furniture")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                        .padding(.horizontal)
+                        .padding(.top, 16)
+                }
+                
+                // "Recent" section with navigation buttons
+                ScrollView {
                     HStack {
-                        ForEach(filters, id: \.0) { filter in
-                            Button(action: { selectedFilter = filter.0 }) {
-                                VStack {
-                                    Image(systemName: filter.1)
-                                        .font(.title2)
-                                        .foregroundColor(selectedFilter == filter.0 ? .white : .black)
-                                        .padding()
-                                        .background(selectedFilter == filter.0 ? Color.green : Color.gray.opacity(0.2))
-                                        .clipShape(Circle())
-                                    
-                                    Text(filter.0)
-                                        .font(.caption)
-                                        .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                        Text("Recent")
+                            .font(.title3)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                        Spacer()
+                        HStack {
+                            // Box button switches to ProjectsView
+                            Button {
+                                withAnimation {
+                                    recentMode = .box
+                                }
+                            } label: {
+                                Image(systemName: "square.split.bottomrightquarter")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                            }
+                            // Sofa button remains active in Furniture view
+                            Button {
+                                withAnimation {
+                                    recentMode = .sofa
+                                }
+                            } label: {
+                                Image(systemName: "sofa.fill")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                            }
+                        }
+                        .padding(.vertical, 7.5)
+                        .padding(.horizontal, 15)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(Color(red: 236/255, green: 216/255, blue: 189/255))
+                        )
+                        .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    }
+                    .padding(.horizontal)
+                    
+                    // Horizontal scroll of sample furniture items
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 15) {
+                            ForEach(recentItems.prefix(3), id: \.id) { furniture in
+                                FurnitureCard(furniture: furniture)
+                                    .frame(width: 123, height: 212)
+                                    .onTapGesture {
+                                        withAnimation {
+                                            selectedFurniture = furniture
+                                        }
+                                    }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    
+                    // Filters row with circular icons and labels
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 24) {
+                            ForEach(filters, id: \.0) { filter in
+                                Button(action: {
+                                    selectedFilter = filter.0
+                                }) {
+                                    VStack(spacing: 6) {
+                                        Circle()
+                                            .fill(
+                                                selectedFilter == filter.0
+                                                ? Color(red: 99/255, green: 83/255, blue: 70/255)
+                                                : Color(red: 236/255, green: 216/255, blue: 189/255)
+                                            )
+                                            .frame(width: 56, height: 56)
+                                            .overlay(
+                                                Image(systemName: filter.1)
+                                                    .font(.title2)
+                                                    .foregroundColor(
+                                                        selectedFilter == filter.0
+                                                        ? Color(red: 236/255, green: 216/255, blue: 189/255)
+                                                        : Color(red: 99/255, green: 83/255, blue: 70/255)
+                                                    )
+                                            )
+                                        Text(filter.0)
+                                            .font(.subheadline)
+                                            .fontWeight(selectedFilter == filter.0 ? .bold : .regular)
+                                            .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                                    }
                                 }
                             }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+                    .padding(.top, 12)
+                    
+                    // Main grid of furniture items after filtering and search query
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                        ForEach(filteredFurniture(), id: \.id) { furniture in
+                            FurnitureCard(furniture: furniture)
+                                .frame(width: 173, height: 188)
+                                .onTapGesture {
+                                    withAnimation {
+                                        selectedFurniture = furniture
+                                    }
+                                }
+                        }
+                    }
+                    .padding([.horizontal, .bottom])
+                    .padding(.top, 4)
                 }
-                .padding()
-                
-                // Grid of Items
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        ForEach(recentItems) { item in
-                            NavigationLink(destination: FurnitureDetailView(item: item)) {
-                                    FurnitureCard(item: item)
-                                    .foregroundColor(.black)
+            }
+            if !isKeyboardVisible {
+                withAnimation {
+                    BottomNavigationBar()
+                }
+            }
+            
+            // Black popup overlay when a furniture item is selected.
+            if let selectedFurniture = selectedFurniture {
+                ZStack {
+                    // Dark, translucent background behind the card
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            // Close popup if user taps outside the card
+                            withAnimation {
+                                self.selectedFurniture = nil
                             }
                         }
                     
@@ -168,63 +346,82 @@ struct FurnitureLibraryView: View {
                         .padding(.top, 8)
                     }
                     .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            // Matches your overall beige scheme:
+                            .fill(Color(red: 255/255, green: 242/255, blue: 223/255))
+                    )
+                    .frame(width: 320) // Adjust card width to suit your design
+                    .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
+                    .padding(.horizontal, 16)
                 }
-                
+                .transition(.opacity)  // Fade in/out transition
             }
         }
-            
+    }
+    
+    // MARK: - Filter Logic
+    private func filteredFurniture() -> [Furniture] {
+        var result = recentItems
+        if !searchQuery.isEmpty {
+            result = result.filter { furniture in
+                furniture.name.lowercased().contains(searchQuery.lowercased())
+            }
         }
-       
+        if let filterType = filterMapping[selectedFilter] {
+            result = result.filter { $0.type.lowercased() == filterType }
+        }
+        return result
+    }
 }
 
-struct FurnitureItem: Identifiable {
+// MARK: - Model and Card
+struct Furniture: Identifiable {
     let id = UUID()
     let name: String
     let tags: [String]
     let imageName: String
+    let type: String
 }
 
 struct FurnitureCard: View {
-    let item: FurnitureItem
+    var furniture: Furniture
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ZStack(alignment: .topTrailing) {
-                Image(item.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(10)
-                
-                Image(systemName: "lock.fill")
-                    .padding(8)
-                    .background(Color.white.opacity(0.7))
-                    .clipShape(Circle())
-                    .padding(8)
-            }
+        ZStack {
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .clipped()
             
-            VStack(alignment: .leading) {
+            LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.6), Color.clear]),
+                           startPoint: .bottom,
+                           endPoint: .center)
+                .cornerRadius(12)
+            
+            VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    ForEach(item.tags, id: \.self) { tag in
+                    ForEach(furniture.tags, id: \.self) { tag in
                         Text(tag)
-                        
-                        
-                            .font(.caption)
-                            .padding(4)
-                            .background(Color.orange.opacity(0.8))
-                            .cornerRadius(5)
+                            .font(.system(size: 8))
+                            .fontWeight(.bold)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(Color(red: 206/255, green: 135/255, blue: 35/255))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .lineLimit(1)
                     }
                 }
-                
-                Text(item.name)
+                Text(furniture.name)
                     .font(.headline)
-                    .bold()
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .lineLimit(1)
             }
-            .padding(.horizontal)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         }
-        .frame(width: 160)
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 3)
+        .cornerRadius(12)
     }
 }
 struct Furniture3DViewWrapper: UIViewControllerRepresentable {
@@ -239,19 +436,8 @@ struct Furniture3DViewWrapper: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: Furniture3DView, context: Context) {}
 }
 
-struct BottomNavItem: View {
-    let icon: String
-    
-    var body: some View {
-        Image(systemName: icon)
-            .font(.title2)
-            .foregroundColor(.black)
-            .padding()
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
+struct FurnitureLibraryView_Previews: PreviewProvider {
     static var previews: some View {
-        FurnitureLibraryView()
+        GeneralView()
     }
 }
