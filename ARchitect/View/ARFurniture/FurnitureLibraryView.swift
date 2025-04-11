@@ -95,7 +95,6 @@ struct FurnitureLibraryView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
-                
                 if isSearchActive {
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass")
