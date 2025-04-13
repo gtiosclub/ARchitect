@@ -32,15 +32,17 @@ struct FurnitureDetailView: View {
                     .bold()
                     .padding()
                 
-                NavigationLink(destination: Furniture3DView(item: item)) { // go to 3D View
-                    Text("View In 3D")
-                        .bold()
-                        .font(.title2)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
+                // Previously: Might need to fix this to setup 3D view
+                
+//                NavigationLink(destination: Furniture3DView(item: item)) { // go to 3D View
+//                    Text("View In 3D")
+//                        .bold()
+//                        .font(.title2)
+//                        .padding()
+//                        .background(Color.blue)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(8)
+//                }
             }
             .padding()
             .navigationTitle("Furniture Details")

@@ -15,6 +15,8 @@ import SwiftUI
 struct FurnitureEntryView: View {
     @State private var selectedTab: String = "Furniture"
     @State private var searchText: String = ""
+    @State private var recentMode: RecentMode = .box
+    
     
     let tabs = ["Projects", "Furniture"]
     let filters = ["All Projects", "Favorites", "A-Z", "Private", "Public"]
@@ -25,7 +27,7 @@ struct FurnitureEntryView: View {
                 navigationHeader
                 
                 if selectedTab == "Projects" {
-                    ProjectsView()
+                    ProjectsView(recentMode: $recentMode)
                 } else {
                     FurnitureLibraryView(searchText: $searchText)
                 }
