@@ -7,7 +7,7 @@ enum RecentMode {
 
 struct GeneralView: View {
     @State private var recentMode: RecentMode = .box
-    @State private var selectedTab: String = "Furniture"
+    @State private var selectedTab: String = "Projects"
     @State private var searchText: String = ""
     
     let tabs = ["Projects", "Furniture"]
@@ -18,12 +18,22 @@ struct GeneralView: View {
             VStack (spacing: 0) {
                 navigationHeader
                 
-                if selectedTab == "Projects" {
-                    ProjectsView(recentMode: $recentMode)
-                } else {
-                    FurnitureLibraryView(searchText: $searchText)
+                ZStack {
+                    if selectedTab == "Projects" {
+                        ProjectsView(recentMode: $recentMode)
+                    } else {
+                        FurnitureLibraryView(searchText: $searchText)
+                    }
+                    
+    //                if !isKeyboardVisible {
+    //                    BottomNavigationBar()
+    //                }
+                    
+                    VStack{
+                        Spacer()
+                        BottomNavigationBar()
+                    }
                 }
-                
                    
             }
             .toolbar {
