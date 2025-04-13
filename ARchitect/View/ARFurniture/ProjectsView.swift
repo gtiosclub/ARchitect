@@ -34,92 +34,92 @@ struct ProjectsView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                Spacer()
-                Spacer()
-                Spacer()
-                
-                // Top Bar with Profile and Right Icons
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Button(action: {
-                                // Profile/user action
-                            }) {
-                                Image(systemName: "person.circle.fill")
-                                    .font(.title)
-                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
-                            }
-                            Text("Hello, Steven!")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
-                        }
-                    }
-                    Spacer()
-                    HStack(spacing: 20) {
-                        Button(action: {
-                            withAnimation {
-                                isSearchActive.toggle()
-                            }
-                        }) {
-                            Image(systemName: "magnifyingglass")
-                                .font(.title2)
-                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
-                        }
-                        Button(action: {
-                            // Cart action
-                        }) {
-                            Image(systemName: "cart.fill")
-                                .font(.title2)
-                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.top, 8)
-                
-                // Search Bar
-                if isSearchActive {
-                    HStack(spacing: 8) {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.primary)
-                        TextField("Search projects", text: $searchQuery, onEditingChanged: { isEditing in
-                            withAnimation {
-                                isKeyboardVisible = isEditing
-                            }
-                        })
-                        .foregroundColor(.primary)
-                        .disableAutocorrection(true)
-                        Button {
-                            withAnimation {
-                                searchQuery = ""
-                                isSearchActive = false
-                                isKeyboardVisible = false
-                            }
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .padding(10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(Color(red: 236/255, green: 216/255, blue: 189/255))
-                    )
-                    .padding(.horizontal)
-                    .padding(.top, 8)
-                }
-                
-                // Big Title
-                HStack {
-                    Text("Projects")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
-                        .padding(.horizontal)
-                        .padding(.top, 16)
-                }
+//                Spacer()
+//                Spacer()
+//                Spacer()
+//                
+//                // Top Bar with Profile and Right Icons
+//                HStack {
+//                    VStack(alignment: .leading, spacing: 4) {
+//                        HStack {
+//                            Button(action: {
+//                                // Profile/user action
+//                            }) {
+//                                Image(systemName: "person.circle.fill")
+//                                    .font(.title)
+//                                    .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+//                            }
+//                            Text("Hello, Steven!")
+//                                .font(.headline)
+//                                .fontWeight(.semibold)
+//                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+//                        }
+//                    }
+//                    Spacer()
+//                    HStack(spacing: 20) {
+//                        Button(action: {
+//                            withAnimation {
+//                                isSearchActive.toggle()
+//                            }
+//                        }) {
+//                            Image(systemName: "magnifyingglass")
+//                                .font(.title2)
+//                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+//                        }
+//                        Button(action: {
+//                            // Cart action
+//                        }) {
+//                            Image(systemName: "cart.fill")
+//                                .font(.title2)
+//                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+//                        }
+//                    }
+//                }
+//                .padding(.horizontal)
+//                .padding(.top, 8)
+//                
+//                // Search Bar
+//                if isSearchActive {
+//                    HStack(spacing: 8) {
+//                        Image(systemName: "magnifyingglass")
+//                            .foregroundColor(.primary)
+//                        TextField("Search projects", text: $searchQuery, onEditingChanged: { isEditing in
+//                            withAnimation {
+//                                isKeyboardVisible = isEditing
+//                            }
+//                        })
+//                        .foregroundColor(.primary)
+//                        .disableAutocorrection(true)
+//                        Button {
+//                            withAnimation {
+//                                searchQuery = ""
+//                                isSearchActive = false
+//                                isKeyboardVisible = false
+//                            }
+//                        } label: {
+//                            Image(systemName: "xmark.circle.fill")
+//                                .foregroundColor(.gray)
+//                        }
+//                    }
+//                    .padding(10)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+//                            .fill(Color(red: 236/255, green: 216/255, blue: 189/255))
+//                    )
+//                    .padding(.horizontal)
+//                    .padding(.top, 8)
+//                }
+//                
+//                // Big Title
+//                HStack {
+//                    Text("Projects")
+//                        .font(.largeTitle)
+//                        .fontWeight(.semibold)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+//                        .padding(.horizontal)
+//                        .padding(.top, 16)
+//                }
                 
                 // Recent Section & Filters
                 ScrollView {

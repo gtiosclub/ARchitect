@@ -6,10 +6,10 @@
 //
 import SwiftUI
 
-public struct FurnitureItem: Identifiable {
-	public let id = UUID()
-	public let name: String
-	public let type: String
-	public let tags: [String]
-	public let imageName: String
+struct FurnitureItem: Identifiable {
+    let id = UUID()
+    let name: String
+    let tags: [String]
+    let imageName: String
+    let category: String
 }
