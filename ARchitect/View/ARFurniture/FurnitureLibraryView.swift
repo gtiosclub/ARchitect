@@ -27,6 +27,13 @@ struct FurnitureLibraryView: View {
         Furniture(name: "modern chair", tags: ["Grey"], imageName: "longGreyCouch", type: "chair")
     ]
     
+//     let recentItems: [FurnitureItem] = [
+// 		FurnitureItem(name: "Grey Couch", type: "Chairs", tags: ["Modern", "Grey"], imageName: "GreyCouch2D"),
+// 		FurnitureItem(name: "Green Sofa", type: "Chairs", tags: ["Contemporary", "Green"], imageName: "greenSofa"),
+// 		FurnitureItem(name: "Orange Couch", type: "Chairs", tags: ["L-Shaped", "Orange"], imageName: "OrangeCouch"),
+// 		FurnitureItem(name: "L-Shaped Grey Couch", type: "Chairs", tags: ["L-Shaped", "Grey"], imageName: "longGreyCouch"),
+        
+       
     let sampleRelatedItems: [(String, String)] = [
         ("Rond table", "rondTableImage"), // <– Replace with real asset name
         ("Chaich", "chaichImage"),
