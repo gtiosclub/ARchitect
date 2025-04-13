@@ -73,7 +73,7 @@ struct LoginView: View {
 			HStack {
 				Spacer()
 				Button(action: {
-					googleSignIn()
+					isAuthenticated = true // for testing purpose
 					print("Welcome \(username), your password is \(password)")
 				}) {
 					Text("Login")
