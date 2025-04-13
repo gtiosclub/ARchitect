@@ -53,9 +53,7 @@ struct BottomNavigationBar: View {
             Spacer()
             
             // Third Button (example: News)
-            Button(action: {
-                // Third button action implementation
-            }) {
+            NavigationLink(destination: ARMediaView().navigationBarBackButtonHidden(true)) {
                 Image(systemName: "newspaper.fill")
                     .font(.title2)
                     .fontWeight(.semibold)

@@ -33,7 +33,7 @@ struct ARMediaView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            ZStack (alignment: .bottom){
                 Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
                     .ignoresSafeArea()
                 VStack {
@@ -92,6 +92,8 @@ struct ARMediaView: View {
                         .padding(.bottom, 20)
                     }
                 }
+                
+                BottomNavigationBar()
             }
         }
     }

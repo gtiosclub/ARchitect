@@ -12,10 +12,12 @@ struct PostView: View {
     @State private var showComments = false
     @State private var showMenuSheet = false
     @State private var showPopUp = false
-    @State private var showPopUpIndex: Int? = nil
+    @State private var selectedFurniture: VREnvironmentConfig.VRObjectConfig? = nil
     
     let environment: VREnvironmentConfig
     let objects: [VREnvironmentConfig.VRObjectConfig]
+    private let barColor = Color(red: 99/255, green: 83/255, blue: 70/255)
+    private let iconColor = Color(red: 222/255, green: 204/255, blue: 177/255)
     
     init(post: Post, showComments: Bool = false) {
         let postID = post.id
@@ -31,57 +33,64 @@ struct PostView: View {
     }
     
     var body: some View {
-        VStack {
-            ZStack{
-                Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
-                    .ignoresSafeArea()
-                VStack(alignment: .leading) {
-                    //header
-                    Text(post.username + "'s Post")
-                        .font(.custom("SF Pro Display",size:18))
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
-                        .frame(height: 58)
-                    Divider()
-                        .background(Color.gray)
-                        .frame(maxWidth: .infinity)
-                    
-                    ScrollView{
-                        // User Info and Options
-                        Spacer().frame(height: 5)
-                        HStack {
-                            Image(systemName: post.userImage)
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                                .clipShape(Circle())
-                            
-                            Text(post.username)
-                                .font(.custom("SF Pro Display",size:14))
-                                .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
-                            
-                            
-                            Spacer()
-                            Button {
-                                showMenuSheet = true
-                            } label: {
-                                   Image(systemName: "ellipsis")
-                                       .frame(width: 30, height: 30)
-                                       .foregroundColor(.black)
-                               }
-                            
-                        }
-                        .padding(.horizontal,20)
-                        Spacer().frame(height: 30)
-                        // AR Image with Overlays
+        ZStack {
+            Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
+                .ignoresSafeArea()
+            VStack(alignment: .leading) {
+                //header
+                Text(post.username + "'s Post")
+                    .font(.custom("SF Pro Display",size:18))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
+                    .frame(height: 58)
+                Divider()
+                    .background(Color.gray)
+                    .frame(maxWidth: .infinity)
+                
+                ScrollView {
+                    // User Info and Options
+                    Spacer().frame(height: 5)
+                    HStack {
+                        Image(systemName: post.userImage)
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
                         
+                        Text(post.username)
+                            .font(.custom("SF Pro Display",size:14))
+                            .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
+                        
+                        
+                        Spacer()
+                        Button {
+                            showMenuSheet = true
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.black)
+                        }
+                        
+                    }
+                    .padding(.horizontal,20)
+                    Spacer().frame(height: 30)
+                    // AR Image with Overlays
+                    if !showPopUp {
                         ARSessionView2(config: environment)
                             .aspectRatio(16/12, contentMode: .fit)
                             .frame(maxWidth: .infinity)
                             .cornerRadius(12)
                             .padding(.horizontal, 22)
-                        
-                        Spacer().frame(height: 30)
-                        // Description
+                    } else {
+                        Rectangle()
+                        .fill(Color.clear)
+                        .aspectRatio(16/12, contentMode: .fit)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 22)
+                    }
+                    
+                    Spacer().frame(height: 30)
+                    // Description
+                    VStack {
                         Text(post.description)
                             .font(.custom("SF Pro Display",size:16))
                             .padding(.horizontal,22)
@@ -93,72 +102,85 @@ struct PostView: View {
                             .padding(.horizontal,22)
                         Spacer().frame(height: 20)
                         //Featured
-                        FeaturedInPost(objects: objects, showPopUp: $showPopUp, showPopUpIndex: $showPopUpIndex)
+                        FeaturedInPost(objects: objects, showPopUp: $showPopUp, selectedFurniture: $selectedFurniture)
                     }
-                    HStack {
-                        Button {
-                            post.user_liked.toggle()
-                            post.likes += post.user_liked ? 1 : -1
-                            
-                        } label: {
-                               Image(systemName: post.user_liked ? "heart.fill" : "heart")
-                                .font(.custom("SF Pro Display",size:24))
-                                .foregroundColor(post.user_liked ? .red : .white)
-                           }
-                        
-                        Spacer()
-                        
-                        Button {
-                            showComments = true
-                        } label: {
-                               Image(systemName: "bubble.left")
-                                .font(.custom("SF Pro Display",size:24))
-                                   .foregroundColor(.white)
-                           }
-                        Spacer()
-                        
-                        Button {
-                            showMenuSheet = true
-                        } label: {
-                           Image(systemName: "square.and.arrow.up")
-                            .font(.custom("SF Pro Display",size:24))
-                               .foregroundColor(.white)
-                        }
-                    }
-                    .padding(.horizontal, 60)
-                    .frame(width: 362, height: 64)
-                    .background(
-                        Color(.sRGB, red: 99/255, green: 83/255, blue: 70/255)
-                            .cornerRadius(20)
-                    )
-                    .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
-                    .frame(maxWidth: .infinity)
-                        
-                        
-                
                     
-                
                 }
                 
+                HStack {
+                    Spacer()
+                    
+                    // Plus Button opens the AR session view (using NavigationLink)
+                    Button(action: {
+                        post.toggleLike()
+                    }) {
+                        Image(systemName: post.user_liked ? "heart.fill" : "heart")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(post.user_liked ? .red : .white)
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    
+                    Button(action: {
+                        showComments = true
+                    }) {
+                        Image(systemName: "bubble.left")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(iconColor)
+                    }
+                    
+                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    
+                    Button(action: {
+                        showMenuSheet = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(iconColor)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 20)
+                .background(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(barColor.opacity(0.90))
+                        .blur(radius: 1)
+                )
+                .padding(.horizontal, 40)
+                .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                .ignoresSafeArea()
+                
+            }
+            .sheet(isPresented: $showComments) {
+                CommentSectionView(viewModel: $post.commentsModel)
+            }
+            .sheet(isPresented: $showMenuSheet) {
+                MenuSheet(post: post)
             }
             
-            if showPopUp, let index = showPopUpIndex {
-                GalleryView(
-                    objects: objects,
+            if showPopUp, let selectedFurniture = selectedFurniture {
+                FeaturedCard(
                     isPresented: $showPopUp,
-                    currentImageIndex: index
+                    selectedFurniture: selectedFurniture
                 )
-                .transition(.opacity)
-                .zIndex(1)
             }
         }
-        .sheet(isPresented: $showComments) {
-            CommentSectionView(viewModel: $post.commentsModel)
-        }
-        .sheet(isPresented: $showMenuSheet) {
-            MenuSheet(post: post)
-        }
-        
     }
 }
 
@@ -166,16 +188,9 @@ struct PostView: View {
 struct FeaturedInPost: View {
     @State var objects: [VREnvironmentConfig.VRObjectConfig]
     @Binding var showPopUp: Bool
-    @Binding var showPopUpIndex: Int?
-    let filters = [
-        ("Chairs", "chair.fill"),
-        ("Drawers", "archivebox.fill"),
-        ("Lights", "lamp.floor.fill"),
-        ("Beds", "bed.double.fill"),
-        ("Sofas", "sofa.fill"),
-        ("Desks", "table.furniture.fill"),
-        ("Shelves", "cabinet.fill")
-    ]
+    @Binding var selectedFurniture: VREnvironmentConfig.VRObjectConfig?
+    
+
     let colors: [Color] = [.red, .green, .blue, .orange, .purple]
     
     var body: some View {
@@ -184,96 +199,134 @@ struct FeaturedInPost: View {
             .font(.custom("SF Pro Display",size:18))
             .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
             .padding(.horizontal,22)
-
-        HStack {
-            let objectsWithIndices = Array(objects.enumerated())
-            
-            ForEach(objectsWithIndices, id: \.element.id) { index, object in
-                let imageName = filters.first(where: { $0.0 == object.filter })?.1 ?? "questionmark.circle.fill"
-                Button {
-                    showPopUpIndex = index
-                    showPopUp.toggle()
-                } label: {
-                    Image(systemName: imageName)
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(colors[index % colors.count].opacity(0.2))
-                        .clipShape(Circle())
+    
+        ZStack {
+            HStack {
+                let objectsWithIndices = Array(objects.enumerated())
+                
+                ForEach(objectsWithIndices, id: \.element.id) { index, object in
+                    let iconName = object.iconName
+                    Button {
+                        showPopUp.toggle()
+                        self.selectedFurniture = object
+                    } label: {
+                        Image(systemName: iconName)
+                            .font(.title2)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(colors[index % colors.count].opacity(0.2))
+                            .clipShape(Circle())
+                    }
                 }
+                
             }
             
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal,22)
+            
         }
-        
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal,22)
     }
 }
 
 
-struct GalleryView: View {
-    let objects: [VREnvironmentConfig.VRObjectConfig]
+struct FeaturedCard: View {
     @Binding var isPresented: Bool
-    @State var currentImageIndex: Int = 0
-    let filters = [
-        ("Chairs", "chair.fill"),
-        ("Drawers", "archivebox.fill"),
-        ("Lights", "lamp.floor.fill"),
-        ("Beds", "bed.double.fill"),
-        ("Sofas", "sofa.fill"),
-        ("Desks", "table.furniture.fill"),
-        ("Shelves", "cabinet.fill")
+    let selectedFurniture: VREnvironmentConfig.VRObjectConfig
+    
+    let sampleRelatedItems: [(String, String)] = [
+        ("Rond table", "rondTableImage"), // <– Replace with real asset name
+        ("Chaich", "chaichImage"),
+        ("Parson Chair", "parsonChairImage")
     ]
     
     var body: some View {
         ZStack {
-            Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
+            // Dark, translucent background behind the card
+            Color.black.opacity(0.5)
                 .ignoresSafeArea()
+                .allowsHitTesting(true)
+                .onTapGesture {
+                    // Close popup if user taps outside the card
+                    self.isPresented = false
+                }
             
-            VStack {
-                // Close button
+            // The popup card
+            VStack(alignment: .leading, spacing: 16) {
+                
+                // Close button at top-right
                 HStack {
                     Spacer()
-                    Button(action: { isPresented = false }) {
+                    Button {
+                        self.isPresented = false
+                    } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.gray)
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(Color.gray.opacity(0.6))
                     }
                 }
-                .padding()
                 
-                // Gallery
-                TabView(selection: $currentImageIndex) {
-                    ForEach(0..<objects.count, id: \.self) { index in
-                        let imageName = filters.first(where: { $0.0 == objects[index].filter })?.1 ?? "questionmark.circle.fill"
-                        VStack {
-                            Text(objects[index].displayName)
-                                .font(.title)
-                                .padding(.bottom)
-                            
-                            Image(systemName: imageName)
-                                .font(.title2)
-                                .foregroundColor(.black)
-                                .padding()
-                                .background(.white)
-                                .clipShape(Circle())
-                            
-                            // Description
-                            Text(objects[index].description)
-                                .padding()
+                // Main item image
+                // Replace furniture.imageName with your actual asset name if needed.
+                Image(selectedFurniture.imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 200)         // Adjust to your preference
+                    .frame(height: 160)          // Example height
+                    .cornerRadius(12)
+                    .padding(.top, -12)          // Pulls image up a bit if desired
+                
+                // Title and short description
+                Text(selectedFurniture.displayName)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                
+                Text(selectedFurniture.description)
+                    .font(.subheadline)
+                    .foregroundColor(.black.opacity(0.8))
+                    .lineLimit(nil)
+                
+                
+                // “Related Items” header
+                Text("Related Items")
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .padding(.top, 8)
+                
+                // Related items row (example placeholders)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        // Replace with your real “related items” data
+                        ForEach(sampleRelatedItems, id: \.0) { relatedItem in
+                            VStack(spacing: 4) {
+                                // Placeholder image or real image
+                                Image(relatedItem.1)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(6)
+                                
+                                Text(relatedItem.0)
+                                    .font(.caption)
+                                    .foregroundColor(.black)
+                            }
                         }
                     }
+                    .padding(.vertical, 4)
                 }
-                .tabViewStyle(PageTabViewStyle())
-                .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                
-                Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
-            .cornerRadius(20)
             .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    // Matches your overall beige scheme:
+                    .fill(Color(red: 255/255, green: 242/255, blue: 223/255))
+            )
+            .frame(width: 320) // Adjust card width to suit your design
+            .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
+            .padding(.horizontal, 16)
         }
+        .transition(.opacity)  // Fade in/out transition
     }
 }
 

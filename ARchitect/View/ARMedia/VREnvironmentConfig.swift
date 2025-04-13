@@ -21,6 +21,8 @@ struct VREnvironmentConfig: Identifiable {
     struct VRObjectConfig: Identifiable {
         let id = UUID()
         let modelName: String
+        let imageName: String
+        let iconName: String
         let filter: String
         let displayName: String
         let description: String
@@ -42,6 +44,8 @@ struct VREnvironmentConfig: Identifiable {
         self.objects = [
             VRObjectConfig(
                 modelName: "modern chair",
+                imageName: "GreyCouch2D",
+                iconName: "chair.fill",
                 filter: "Chairs",
                 displayName: "Modern Chair",
                 description: "A stylish modern chair with minimalist design.",
@@ -54,7 +58,9 @@ struct VREnvironmentConfig: Identifiable {
                 ]
             ),
             VRObjectConfig(
-                modelName: "GreyCouch",
+                modelName: "Grey Couch",
+                imageName: "GreyCouch2D",
+                iconName: "sofa.fill",
                 filter: "Sofas",
                 displayName: "Grey Couch",
                 description: "Comfortable grey couch for modern living rooms.",
