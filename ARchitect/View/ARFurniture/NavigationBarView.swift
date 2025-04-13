@@ -42,7 +42,8 @@ struct BottomNavigationBar: View {
                                 .foregroundColor(iconColor)
                         }
                         .fullScreenCover(isPresented: $isShowingARView) {
-                            ARViewControllerWrapper()
+                            ARSessionView()
+//                            ARViewControllerWrapper()
                         }
             
             Spacer()

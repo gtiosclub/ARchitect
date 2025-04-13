@@ -239,9 +239,9 @@ struct ProjectsView: View {
                 }
             }
             
-            if !isKeyboardVisible {
-                BottomNavigationBar()
-            }
+//            if !isKeyboardVisible {
+//                BottomNavigationBar()
+//            }
             
             // Black popup overlay when a project is selected.
             if let selectedProject = selectedProject {
