@@ -43,8 +43,8 @@ struct VREnvironmentConfig: Identifiable {
         
         self.objects = [
             VRObjectConfig(
-                modelName: "modern chair",
-                imageName: "GreyCouch2D",
+                modelName: "Arm chair",
+                imageName: "armChair",
                 iconName: "chair.fill",
                 filter: "Chairs",
                 displayName: "Modern Chair",
@@ -59,7 +59,7 @@ struct VREnvironmentConfig: Identifiable {
             ),
             VRObjectConfig(
                 modelName: "Grey Couch",
-                imageName: "GreyCouch2D",
+                imageName: "GreyCouch",
                 iconName: "sofa.fill",
                 filter: "Sofas",
                 displayName: "Grey Couch",
