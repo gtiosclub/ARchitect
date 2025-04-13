@@ -8,47 +8,99 @@
 import SwiftUI
 
 struct ARMediaView: View {
-    @State var posts: [Post] = [
-        Post(
-            username: "username",
-            userImage: "person.circle.fill", // SF Symbol for user avatar
-            title: "1990 Vintage",
-            imageName: "ar_room1", // Replace with actual asset name
-            tags: ["vintage", "retro", "vibe"],
-            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-            timeAgo: "4 days ago",
-            likes: 120),
-        Post(
-            username: "Bob",
-            userImage: "person.circle.fill", // SF Symbol for user avatar
-            title: "Virtual Office",
-            imageName: "ar_room2", // Replace with actual asset name
-            tags: ["vintage", "retro"],
-            description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-            timeAgo: "10 days ago",
-            likes: 100),
-    ]
+    @State var posts: [Post]
+    @State private var showSettings = false
+    
+    init() {
+        //Firebase call gets all posts
+        posts = [
+            Post(
+                username: "username",
+                userImage: "person.circle.fill", // SF Symbol for user avatar
+                title: "1990 Vintage",
+                imageName: "ar_room1", // Replace with actual asset name
+                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+                likes: 120),
+            Post(
+                username: "Bob",
+                userImage: "person.circle.fill", // SF Symbol for user avatar
+                title: "Virtual Office",
+                imageName: "ar_room2", // Replace with actual asset name
+                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
+                likes: 100),
+        ]
+    }
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("ARchitect")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.top, 10)
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        ForEach($posts) { $post in
-                            NavigationLink(destination: PostView(post: post)) {
-                                SubARView(post:$post)
+            ZStack {
+                Color(.sRGB,red: 249/255, green: 237/255, blue: 215/255)
+                    .ignoresSafeArea()
+                VStack {
+                    // Top Bar
+                    HStack {
+                        HStack(spacing: 15) {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                            
+                            Text("ARchitect")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            showSettings.toggle()
+                        }) {
+                            Image(systemName: "line.3.horizontal")
+                                .resizable()
+                                .frame(width: 20, height: 15)
+                                .padding(6)
+                                .foregroundColor(.black)
+                        }
+                        .sheet(isPresented: $showSettings) {
+                            Text("Settings go here")
+                                .font(.title)
+                                .padding()
+                        }
+                        
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    
+                    Divider()
+                        .background(Color.gray)
+                        .frame(maxWidth: .infinity)
+                    
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ForEach(posts) { post in
+//                                if let binding = bindingForPost(id: post.id) {
+                                    NavigationLink(destination: PostView(post: post)) {
+                                        SubARView(post: post)
+                                    }
+//                                }
+                                
+                                Divider()
+                                    .background(Color.gray)
+                                    .frame(maxWidth: .infinity)
                             }
                         }
+                        .padding(.bottom, 20)
                     }
-                    .padding(.bottom, 20)
                 }
             }
         }
     }
+    
+//    private func bindingForPost(id: UUID) -> Binding<Post>? {
+//        guard let index = posts.firstIndex(where: { $0.id == id}) else { return nil}
+//        return $posts[index]
+//    }
+    
 }
 
 #Preview {
@@ -56,76 +108,101 @@ struct ARMediaView: View {
 }
 
 struct SubARView: View {
-    @Binding var post:Post
+    @ObservedObject var post:Post
+    @State private var showComments = false
+    @State private var showMenuSheet = false
     
     var body: some View {
         VStack {
+            // User Info and Options
+            Spacer().frame(height: 5)
+            HStack {
+                Image(systemName: post.userImage)
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .clipShape(Circle())
+                
+                Text(post.username)
+                    .font(.custom("SF Pro Display",size:20))
+                    .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
+                
+                
+                Spacer()
+                Button {
+                    showMenuSheet = true
+                } label: {
+                       Image(systemName: "ellipsis")
+                           .frame(width: 30, height: 30)
+                           .foregroundColor(.black)
+                   }
+                
+            }
+            .padding(.horizontal,20)
+            
+            Spacer().frame(height: 30)
+            
             ZStack(alignment: .bottomLeading) {
                 // AR Image with rounded corners and overlay
                 Image(post.imageName)
                     .resizable()
+                    .frame(height: 300)
+                    .frame(maxWidth: .infinity)
                     .aspectRatio(contentMode: .fit)
-                    .cornerRadius(15)
-                    .overlay(
-                        // Gradient Overlay for Text Readability
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.black.opacity(0.2), Color.black.opacity(0.8)]),
-                            startPoint: .center,
-                            endPoint: .bottom
-                        )
-                        .cornerRadius(15)
-                    )
+                    .background(Color.black.opacity(0.5))
+                    .cornerRadius(20)
                 
                 // Overlay Content
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Image(systemName: post.userImage)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .clipShape(Circle())
-                        
-                        Text(post.username)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                    }
-                    
-                    Text(post.description)
-                        .font(.caption)
-                        .foregroundColor(.white)
-                        .lineLimit(2)
-                }
-                .padding()
+                Text(post.description)
+                    .font(.callout)
+                    .foregroundColor(.white)
+                    .lineLimit(3)
+                    .padding()
+                    .background(Color.black.opacity(0.5))
+                    .cornerRadius(20)
             }
             .padding(.horizontal)
+            
+            Spacer().frame(height: 30)
             
             // Interaction Bar
             HStack {
                 Button(action: {
-                    post.user_liked.toggle()
-                    post.likes += post.user_liked ? 1 : -1
+                    post.toggleLike()
                 }) {
                     HStack {
                         Image(systemName: post.user_liked ? "heart.fill" : "heart")
                             .foregroundColor(.red)
+                            .font(.largeTitle)
                         Text("\(post.likes)+")
                     }
                 }
                 
-                Button(action: {}) {
+                Button(action: {
+                    showComments.toggle()
+                }) {
                     HStack {
                         Image(systemName: "ellipsis.message")
-                        Text("\(post.commentsModel.length())+")
+                            .font(.largeTitle)
+                        Text("\(post.numberOfComments())+")
                     }
                 }
                 
-                Text("\(post.timeAgo)")
-                    .font(.caption)
+                Spacer()
+                
+                Text(post.time_ago())
                     .padding(.leading, 30)
                 
-                Spacer()
             }
             .padding(.horizontal)
         }
         .foregroundColor(.black) // Set the text color to grey
+        .font(.body)
+        .sheet(isPresented: $showMenuSheet) {
+            MenuSheet(post: post)
+        }
+        .sheet(isPresented: $showComments) {
+            CommentSectionView(viewModel: $post.commentsModel)
+        }
+        
     }
 }
