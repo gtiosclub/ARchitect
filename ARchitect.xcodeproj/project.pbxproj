@@ -275,12 +275,12 @@
 			path = furniture;
 			sourceTree = "<group>";
 		};
-		6B8D024D2DA594610081AB8E /* New Group */ = {
+		6B8D024D2DA594610081AB8E /* FurnitureAssets */ = {
 			isa = PBXGroup;
 			children = (
 				4BECD6C62DA4E2CD001608DC /* furniture */,
 			);
-			path = "New Group";
+			path = FurnitureAssets;
 			sourceTree = "<group>";
 		};
 		6B8D024F2DA5949F0081AB8E /* New Group */ = {
@@ -298,7 +298,7 @@
 		7F5A3D622D52A675007BB24F = {
 			isa = PBXGroup;
 			children = (
-				6B8D024D2DA594610081AB8E /* New Group */,
+				6B8D024D2DA594610081AB8E /* FurnitureAssets */,
 				7F5A3D6D2D52A675007BB24F /* ARchitect */,
 				7F5A3D7E2D52A677007BB24F /* ARchitectTests */,
 				7F5A3D882D52A677007BB24F /* ARchitectUITests */,

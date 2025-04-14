@@ -62,18 +62,31 @@ struct AuthenticationView: View {
 					.padding()
 					Image("landingIcon")
 					VStack(spacing: 12) {
-						NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
-							Text("Login")
-								.font(.system(size: 20, weight: .bold, design: .rounded))
-								.foregroundColor(Color("FFF2DF"))
-								.padding()
-								.frame(width: 346, height: 56)
-								.background(Color("635346"))
-								.cornerRadius(15)
-								.overlay(
-									RoundedRectangle(cornerRadius: 15).stroke(Color("635346"), lineWidth: 2)
-								)
-						}
+                        Text("Login")
+                            .font(.system(size: 20, weight: .bold, design: .rounded))
+                            .foregroundColor(Color("FFF2DF"))
+                            .padding()
+                            .frame(width: 346, height: 56)
+                            .background(Color("635346"))
+                            .cornerRadius(15)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15).stroke(Color("635346"), lineWidth: 2)
+                            )
+                            .onTapGesture {
+                                isAuthenticated = true
+                            }
+//						NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
+//							Text("Login")
+//								.font(.system(size: 20, weight: .bold, design: .rounded))
+//								.foregroundColor(Color("FFF2DF"))
+//								.padding()
+//								.frame(width: 346, height: 56)
+//								.background(Color("635346"))
+//								.cornerRadius(15)
+//								.overlay(
+//									RoundedRectangle(cornerRadius: 15).stroke(Color("635346"), lineWidth: 2)
+//								)
+//						}
 						.padding()
 						NavigationLink(destination: SignUpView(isAuthenticated: $isAuthenticated)) {
 							Text("Sign Up")
