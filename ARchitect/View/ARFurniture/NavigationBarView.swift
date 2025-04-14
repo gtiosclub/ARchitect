@@ -26,11 +26,7 @@ struct BottomNavigationBar: View {
             }
             
             Spacer()
-            Spacer()
-            Spacer()
-            Spacer()
-            Spacer()
-            Spacer()
+
             
             // Plus Button opens the AR session view (using NavigationLink)
             Button(action: {
@@ -43,13 +39,9 @@ struct BottomNavigationBar: View {
                         }
                         .fullScreenCover(isPresented: $isShowingARView) {
                             ARViewControllerWrapper()
+//                            FurnitureTryOutView()
                         }
-            
-            Spacer()
-            Spacer()
-            Spacer()
-            Spacer()
-            Spacer()
+
             Spacer()
             
             // Third Button (example: News)

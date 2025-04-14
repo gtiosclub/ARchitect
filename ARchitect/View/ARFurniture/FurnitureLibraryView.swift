@@ -21,6 +21,12 @@ struct FurnitureLibraryView: View {
     @State private var selectedItem: FurnitureItem?
     @State private var isDetailedView = false;
     
+    @State private var showARPreview = false
+    
+    @State private var showHeader = true
+    @State private var lastScrollOffset: CGFloat = 0
+
+    
     let categories = ["Projects", "Furniture"]
     let filters = [
         ("Sofas", "sofa.fill"),
@@ -62,73 +68,93 @@ struct FurnitureLibraryView: View {
     ]
     
     var body: some View {
-      
-            VStack {
-                // Recent Items
-                Text("Recent")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.bottom, 1)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 30) {
-                        ForEach(recentItems.prefix(3)) { item in
-                            NavigationLink(destination: FurnitureDetailView(item: item)) {
-                                FurnitureCard(item: item)
-                                    .frame(width:150, height:200)
-                                    .foregroundColor(.black)
-                            }
-                            
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                
-                // Filters
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(filters, id: \.0) { filter in
-                            Button(action: { selectedFilter = filter.0 }) {
-                                VStack {
-                                    Image(systemName: filter.1)
-                                        .font(.title2)
-                                        .foregroundColor(selectedFilter == filter.0 ? .white : Color(hex: "#3E2A47") //dark brown for filter icon
-)
-                                        .padding()
-                                        .background(selectedFilter == filter.0 ? Color.brown : Color.gray.opacity(0.2))
-                                        .clipShape(Circle())
-                                    
-                                    Text(filter.0)
-                                        .font(.caption)
-                                        .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .padding()
-                
-                // Grid of Items
+        ZStack {
+            Color(hex: "#FFF2DF").ignoresSafeArea()
+            GeometryReader { geo in
                 ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        ForEach(recentItems.filter { $0.category == selectedFilter }) { item in
-                            NavigationLink(destination: FurnitureDetailView(item: item)) {
+                    VStack(spacing: 0) {
+                        Color.clear
+                            .frame(height: 0)
+                            .background(
+                                GeometryReader { scrollGeo in
+                                    Color.clear
+                                        .preference(key: ScrollOffsetPreferenceKey.self, value: scrollGeo.frame(in: .global).minY)
+                                }
+                            )
+                        
+                        if showHeader {
+                            VStack(spacing: 0) {
+                                // 🟤 "Recent"
+                                Text("Recent")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.bottom, 1)
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 30) {
+                                        ForEach(recentItems.prefix(3)) { item in
+                                            FurnitureCard(item: item)
+                                                .onTapGesture {
+                                                    showARPreview = true
+                                                }
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                                
+                                // 🟤 Filters
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack {
+                                        ForEach(filters, id: \.0) { filter in
+                                            Button(action: { selectedFilter = filter.0 }) {
+                                                VStack {
+                                                    Image(systemName: filter.1)
+                                                        .font(.title2)
+                                                        .foregroundColor(selectedFilter == filter.0 ? .white : Color(hex: "#3E2A47"))
+                                                        .padding()
+                                                        .background(selectedFilter == filter.0 ? Color.brown : Color.gray.opacity(0.2))
+                                                        .clipShape(Circle())
+                                                    
+                                                    Text(filter.0)
+                                                        .font(.caption)
+                                                        .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                                .padding()
+                            }
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                        }
+                        
+                        // 🟤 Main Grid
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                            ForEach(recentItems.filter { $0.category == selectedFilter }) { item in
                                 FurnitureCard(item: item)
-                                    .foregroundColor(.black)
+                                    .onTapGesture {
+                                        showARPreview = true
+                                    }
                             }
                         }
+                        .padding()
                     }
-
-                    .padding()
                 }
-                
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                    let delta = offset - lastScrollOffset
+                    if abs(delta) > 5 {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            showHeader = delta > 0 || offset > -50 // reveal on scroll up or near top
+                        }
+                    }
+                    lastScrollOffset = offset
+                }
             }
-            .background(Color(hex: "#FFF2DF")) //set back ground
-        
-            
         }
+
+    }
        
 }
 
@@ -136,44 +162,48 @@ struct FurnitureCard: View {
     let item: FurnitureItem
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ZStack(alignment: .topTrailing) {
-                Image(item.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(10)
-                
-                Image(systemName: "lock.fill")
-                    .padding(8)
-                    .background(Color.white.opacity(0.7))
-                    .clipShape(Circle())
-                    .padding(8)
-            }
-            
-            VStack(alignment: .leading) {
+        ZStack {
+            Image(item.imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 173, height: 188)
+                .clipped()
+
+            LinearGradient(
+                gradient: Gradient(colors: [Color.black.opacity(0.6), Color.clear]),
+                startPoint: .bottom,
+                endPoint: .center
+            )
+            .cornerRadius(12)
+
+            VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     ForEach(item.tags, id: \.self) { tag in
                         Text(tag)
-                        
-                        
-                            .font(.caption)
-                            .padding(4)
-                            .foregroundColor(Color(hex: "#FFF2DF"))
-                            .background(Color.orange.opacity(0.8))
-                            .cornerRadius(5)
+                            .font(.system(size: 8))
+                            .fontWeight(.bold)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(Color(red: 206/255, green: 135/255, blue: 35/255))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .lineLimit(1)
                     }
                 }
-                
-                Text(item.name)
-                    .font(.system(.body, design: .rounded))
-                    .bold()
-                    .foregroundColor(Color(hex: "#635346"))
 
+                Text(item.name)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .lineLimit(1)
             }
-            .padding(.horizontal)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         }
-        .frame(width: 160)
-        .background(Color(hex: "#FFF2DF"))
+        .frame(width: 173, height: 188)
+        .background(Color(hex: "#FFF2DF")) // optional if you want card color
+        .cornerRadius(12)
+        .clipped()
         .shadow(radius: 3)
     }
 }
@@ -194,5 +224,12 @@ struct HomeView_Previews: PreviewProvider {
 
     static var previews: some View {
         FurnitureLibraryView(searchText: $placeHolderSearchText)
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
