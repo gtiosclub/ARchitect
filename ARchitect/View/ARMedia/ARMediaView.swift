@@ -28,6 +28,23 @@ struct ARMediaView: View {
                 imageName: "ar_room2", // Replace with actual asset name
                 description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
                 likes: 100),
+            
+            Post(
+                username: "Sam",
+                imageName: "ar_room3", // Replace with actual asset name
+                description: "My own room with amazing lighting and furniture. Explore how I have transfomed my space"),
+            
+            Post(
+                username: "Paul",
+                imageName: "ar_room4", // Replace with actual asset name
+                description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts."),
+            Post(imageName: "ar_room5"),
+            
+            Post(
+                username: "Steven",
+                imageName: "ar_room6", // Replace with actual asset name
+                description: "My own room with amazing lighting and furniture. Explore how I have transfomed my space"),
+            Post(imageName: "ar_room7")
         ]
     }
     
@@ -147,14 +164,15 @@ struct SubARView: View {
                 // AR Image with rounded corners and overlay
                 Image(post.imageName)
                     .resizable()
-                    .frame(height: 300)
-                    .frame(maxWidth: .infinity)
                     .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: 300)
                     .background(Color.black.opacity(0.5))
                     .cornerRadius(20)
                 
                 // Overlay Content
                 Text(post.description)
+                    .frame(maxWidth: .infinity)
                     .font(.callout)
                     .foregroundColor(.white)
                     .lineLimit(3)

@@ -38,7 +38,7 @@ struct PostView: View {
                 .ignoresSafeArea()
             VStack(alignment: .leading) {
                 //header
-                Text(post.username + "'s Post")
+                Text("\(post.username)'s Post: \(post.title)")
                     .font(.custom("SF Pro Display",size:18))
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundColor(Color(red: 102/255, green: 82/255, blue: 56/255))
