@@ -29,6 +29,39 @@ class Post: ObservableObject, Identifiable {
         self.user_liked = user_liked
         self.commentsModel = commentsModel
     }
+    
+    init(username: String, imageName: String, description: String) {
+        self.username = username
+        self.userImage = "person.circle.fill" // SF Symbol for user avatar
+        self.title = "1990 Vintage"
+        self.imageName = imageName // Replace with actual asset name
+        self.description = description
+        self.likes = 120
+        self.user_liked = false
+        self.commentsModel = CommentViewModel()
+    }
+    
+    init(imageName: String) {
+        self.username = "username"
+        self.userImage = "person.circle.fill" // SF Symbol for user avatar
+        self.title = "1990 Vintage"
+        self.imageName = imageName // Replace with actual asset name
+        self.description = "Lengthy description about the furniture and the positioning of different elements that were used. It is a good example of what we can do."
+        self.likes = 120
+        self.user_liked = false
+        self.commentsModel = CommentViewModel()
+    }
+    
+    init() {
+        self.username = "username"
+        self.userImage = "person.circle.fill" // SF Symbol for user avatar
+        self.title = "1990 Vintage"
+        self.imageName = "ar_room1" // Replace with actual asset name
+        self.description = "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts."
+        self.likes = 120
+        self.user_liked = false
+        self.commentsModel = CommentViewModel()
+    }
    
 //    var environment: VREnvironmentConfig
 //
