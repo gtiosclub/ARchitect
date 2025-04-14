@@ -36,14 +36,14 @@ struct GeneralView: View {
                 }
                    
             }
-            .toolbar {
-                NavigationLink {
-                    ARSessionView()
-                } label: {
-                    Text("Start AR")
-                }
-                
-            }
+//            .toolbar {
+//                NavigationLink {
+//                    ARSessionView()
+//                } label: {
+//                    Text("Start AR")
+//                }
+//                
+//            }
         }
         .background(Color(hex: "#FFF2DF").edgesIgnoringSafeArea(.all))
         
