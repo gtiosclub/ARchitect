@@ -274,22 +274,26 @@ class ARViewController: UIViewController {
 
         if wrapper.movementMode == .vertical {
             // Freeform vertical dragging
-            let deltaY = Float(translation.y) * -0.004
+            let deltaY = Float(translation.y) * -0.007
             position.y += deltaY
         } else {
             // Try raycast first
             let results = arView.raycast(from: location, allowing: .existingPlaneGeometry, alignment: .horizontal)
 
-            if let result = results.first {
-                position.x = result.worldTransform.columns.3.x
-                position.z = result.worldTransform.columns.3.z
-            } else {
-                // Fallback: freeform dragging
-                let deltaX = Float(translation.x) * 0.004
-                let deltaZ = Float(translation.y) * 0.004
-                position.x += deltaX
-                position.z += deltaZ
-            }
+//            if let result = results.first {
+//                position.x = result.worldTransform.columns.3.x
+//                position.z = result.worldTransform.columns.3.z
+//            } else {
+//                // Fallback: freeform dragging
+//                let deltaX = Float(translation.x) * 0.004
+//                let deltaZ = Float(translation.y) * 0.004
+//                position.x += deltaX
+//                position.z += deltaZ
+//            }
+            let deltaX = Float(translation.x) * 0.007
+            let deltaZ = Float(translation.y) * 0.007
+            position.x += deltaX
+            position.z += deltaZ
         }
 
         wrapper.entity.position = position
