@@ -153,6 +153,9 @@ struct FurnitureLibraryView: View {
                 }
             }
         }
+        .sheet(isPresented: $showARPreview) {
+            FurnitureTryOutView()
+        }
 
     }
        
