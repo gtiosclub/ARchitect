@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct EditProjectView: View {
+    @Environment(\.dismiss) private var dismiss
     // The project is passed into the view.
     let project: Project
 
@@ -34,14 +35,15 @@ struct EditProjectView: View {
                 // Custom Navigation Bar
                 HStack {
                     Spacer()
-                    NavigationLink(destination: GeneralView().navigationBarHidden(true)) {
+                    
+                    Button {
+                        dismiss()
+                    } label: {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
-                            .fontWeight(.semibold)
-                            .font(.title2)
+                                .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
+                                .fontWeight(.semibold)
+                                .font(.title2)
                     }
-                    Spacer()
-                    Spacer()
                     Spacer()
                     
                     Text(projectName)
@@ -49,8 +51,7 @@ struct EditProjectView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(Color(red: 99/255, green: 83/255, blue: 70/255))
                     
-                    Spacer()
-                    Spacer()
+
                     Spacer()
                     Button {
                         // Dismiss logic here
