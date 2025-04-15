@@ -32,10 +32,10 @@ struct ARSessionView2: View {
             )
             
             if showInfoPanel, let objectInfo = selectedObjectInfo {
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         Text(objectInfo.displayName)
-                            .font(.body)
+                            .font(.title)
                             .fontWeight(.bold)
                         
                         Spacer()
@@ -57,7 +57,7 @@ struct ARSessionView2: View {
                     }
                     
                     Text(objectInfo.description)
-                        .font(.footnote)
+                        .font(.body)
                         .padding(.vertical, 4)
                     
                     if !objectInfo.properties.isEmpty {
@@ -65,27 +65,27 @@ struct ARSessionView2: View {
                         
                         ForEach(Array(objectInfo.properties.keys.sorted()), id: \.self) { key in
                             if let value = objectInfo.properties[key] {
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 8) {
                                     Text(key)
-                                        .font(.footnote)
+                                        .font(.body)
                                         .fontWeight(.semibold)
                                     
                                     Text(value)
-                                        .font(.caption)
+                                        .font(.footnote)
                                 }
-                                .padding(.vertical, 2)
+                                .padding(.vertical, 4)
                             }
                         }
                     }
                 }
                 .padding()
-                .frame(width: 180, height: 200)
+                .frame(width: 300, height: 400)
                 .background(Color.white)
                 .foregroundColor(Color.black)
                 .cornerRadius(10)
                 .shadow(radius: 5)
                 .padding()
-                .offset(x: 80, y: 0)
+                .offset(x: 80, y: 100)
                 .transition(.scale.combined(with: .opacity))
             }
         }

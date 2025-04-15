@@ -72,21 +72,19 @@ struct PostView: View {
                         
                     }
                     .padding(.horizontal,20)
-                    Spacer().frame(height: 30)
+                    
                     // AR Image with Overlays
-                    if !showPopUp {
-                        ARSessionView2(config: environment)
-                            .aspectRatio(16/12, contentMode: .fit)
+                    NavigationLink(destination: ARSessionView2(config: environment)
+                        .ignoresSafeArea()) {
+                        Image(post.imageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: .infinity)
-                            .cornerRadius(12)
-                            .padding(.horizontal, 22)
-                    } else {
-                        Rectangle()
-                        .fill(Color.clear)
-                        .aspectRatio(16/12, contentMode: .fit)
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 22)
+                            .frame(maxHeight: 300)
+                            .background(Color.black.opacity(0.5))
+                            .cornerRadius(20)
                     }
+                    .padding()
                     
                     Spacer().frame(height: 30)
                     // Description

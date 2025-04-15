@@ -50,7 +50,7 @@ struct VREnvironmentConfig: Identifiable {
                 displayName: "Modern Chair",
                 description: "A stylish modern chair with minimalist design.",
                 position: SIMD3<Float>(0.3, -2.5, 2),
-                scale: SIMD3<Float>(-0.015, 0.015, -0.015),
+                scale: SIMD3<Float>(-0.012, 0.012, -0.012),
                 properties: [
                     "Price": "$499.99",
                     "Material": "Leather and metal",
