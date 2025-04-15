@@ -47,7 +47,7 @@ class Post: ObservableObject, Identifiable {
         self.title = "1990 Vintage"
         self.imageName = imageName // Replace with actual asset name
         self.description = "Lengthy description about the furniture and the positioning of different elements that were used. It is a good example of what we can do."
-        self.likes = 120
+        self.likes = 80
         self.user_liked = false
         self.commentsModel = CommentViewModel()
     }
@@ -58,7 +58,7 @@ class Post: ObservableObject, Identifiable {
         self.title = "1990 Vintage"
         self.imageName = "ar_room1" // Replace with actual asset name
         self.description = "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts."
-        self.likes = 120
+        self.likes = 600
         self.user_liked = false
         self.commentsModel = CommentViewModel()
     }

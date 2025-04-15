@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ARMediaView: View {
     @State var posts: [Post]
-    @State private var showSettings = false
+    //@State private var showSettings = false
     
     init() {
         //Firebase call gets all posts
@@ -20,14 +20,14 @@ struct ARMediaView: View {
                 title: "1990 Vintage",
                 imageName: "ar_room1", // Replace with actual asset name
                 description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-                likes: 120),
+                likes: 35),
             Post(
                 username: "Bob",
                 userImage: "person.circle.fill", // SF Symbol for user avatar
                 title: "Virtual Office",
                 imageName: "ar_room2", // Replace with actual asset name
                 description: "Bold interior design project that revives the vibrant energy of the early '80s. It marries vivid color schemes, geometric patterns, and nostalgic accents with contemporary comforts.",
-                likes: 100),
+                likes: 28),
             
             Post(
                 username: "Sam",
@@ -68,21 +68,21 @@ struct ARMediaView: View {
                         }
                         
                         Spacer()
-                        
-                        Button(action: {
-                            showSettings.toggle()
-                        }) {
-                            Image(systemName: "line.3.horizontal")
-                                .resizable()
-                                .frame(width: 20, height: 15)
-                                .padding(6)
-                                .foregroundColor(.black)
-                        }
-                        .sheet(isPresented: $showSettings) {
-                            Text("Settings go here")
-                                .font(.title)
-                                .padding()
-                        }
+//                        
+//                        Button(action: {
+//                            showSettings.toggle()
+//                        }) {
+//                            Image(systemName: "line.3.horizontal")
+//                                .resizable()
+//                                .frame(width: 20, height: 15)
+//                                .padding(6)
+//                                .foregroundColor(.black)
+//                        }
+//                        .sheet(isPresented: $showSettings) {
+//                            Text("Settings go here")
+//                                .font(.title)
+//                                .padding()
+//                        }
                         
                     }
                     .padding(.horizontal)
@@ -193,7 +193,7 @@ struct SubARView: View {
                         Image(systemName: post.user_liked ? "heart.fill" : "heart")
                             .foregroundColor(.red)
                             .font(.largeTitle)
-                        Text("\(post.likes)+")
+                        Text(post.likes >= 100 ? "100+" : "\(post.likes)")
                     }
                 }
                 

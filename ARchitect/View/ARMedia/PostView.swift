@@ -232,9 +232,9 @@ struct FeaturedCard: View {
     let selectedFurniture: VREnvironmentConfig.VRObjectConfig
     
     let sampleRelatedItems: [(String, String)] = [
-        ("Rond table", "rondTableImage"), // <– Replace with real asset name
-        ("Chaich", "chaichImage"),
-        ("Parson Chair", "parsonChairImage")
+        ("Bar Stool chair", "barChair"), // <– Replace with real asset name
+        ("Dining Table", "SimpleDiningTable"),
+        ("Personal Chair", "Living Room Chair")
     ]
     
     var body: some View {
