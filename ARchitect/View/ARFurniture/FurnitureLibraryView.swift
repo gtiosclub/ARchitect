@@ -68,93 +68,94 @@ struct FurnitureLibraryView: View {
     ]
     
     var body: some View {
-        ZStack {
-            Color(hex: "#FFF2DF").ignoresSafeArea()
-            GeometryReader { geo in
-                ScrollView {
-                    VStack(spacing: 0) {
-                        Color.clear
-                            .frame(height: 0)
-                            .background(
-                                GeometryReader { scrollGeo in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self, value: scrollGeo.frame(in: .global).minY)
-                                }
-                            )
-                        
-                        if showHeader {
-                            VStack(spacing: 0) {
-                                // 🟤 "Recent"
-                                Text("Recent")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.horizontal)
-                                    .padding(.bottom, 1)
-                                
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 30) {
-                                        ForEach(recentItems.prefix(3)) { item in
-                                            FurnitureCard(item: item)
-                                                .onTapGesture {
-                                                    showARPreview = true
-                                                }
-                                        }
+        NavigationStack {
+            ZStack {
+                Color(hex: "#FFF2DF").ignoresSafeArea()
+                GeometryReader { geo in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            Color.clear
+                                .frame(height: 0)
+                                .background(
+                                    GeometryReader { scrollGeo in
+                                        Color.clear
+                                            .preference(key: ScrollOffsetPreferenceKey.self, value: scrollGeo.frame(in: .global).minY)
                                     }
-                                    .padding(.horizontal)
-                                }
-                                
-                                // 🟤 Filters
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack {
-                                        ForEach(filters, id: \.0) { filter in
-                                            Button(action: { selectedFilter = filter.0 }) {
-                                                VStack {
-                                                    Image(systemName: filter.1)
-                                                        .font(.title2)
-                                                        .foregroundColor(selectedFilter == filter.0 ? .white : Color(hex: "#3E2A47"))
-                                                        .padding()
-                                                        .background(selectedFilter == filter.0 ? Color.brown : Color.gray.opacity(0.2))
-                                                        .clipShape(Circle())
-                                                    
-                                                    Text(filter.0)
-                                                        .font(.caption)
-                                                        .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                                )
+                            
+                            if showHeader {
+                                VStack(spacing: 0) {
+                                    // 🟤 "Recent"
+                                    Text("Recent")
+                                        .font(.headline)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal)
+                                        .padding(.bottom, 1)
+                                    
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 30) {
+                                            ForEach(recentItems.prefix(3)) { item in
+                                                NavigationLink {
+                                                    FurnitureTryOutView()
+                                                } label: {
+                                                    FurnitureCard(item: item)
                                                 }
                                             }
                                         }
+                                        .padding(.horizontal)
                                     }
-                                    .padding(.horizontal)
+                                    
+                                    // 🟤 Filters
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack {
+                                            ForEach(filters, id: \.0) { filter in
+                                                Button(action: { selectedFilter = filter.0 }) {
+                                                    VStack {
+                                                        Image(systemName: filter.1)
+                                                            .font(.title2)
+                                                            .foregroundColor(selectedFilter == filter.0 ? .white : Color(hex: "#3E2A47"))
+                                                            .padding()
+                                                            .background(selectedFilter == filter.0 ? Color.brown : Color.gray.opacity(0.2))
+                                                            .clipShape(Circle())
+                                                        
+                                                        Text(filter.0)
+                                                            .font(.caption)
+                                                            .foregroundColor(selectedFilter == filter.0 ? .black : .gray)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .padding(.horizontal)
+                                    }
+                                    .padding()
                                 }
-                                .padding()
+                                .transition(.move(edge: .top).combined(with: .opacity))
                             }
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                        }
-                        
-                        // 🟤 Main Grid
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                            ForEach(recentItems.filter { $0.category == selectedFilter }) { item in
-                                FurnitureCard(item: item)
-                                    .onTapGesture {
-                                        showARPreview = true
+                            
+                            // 🟤 Main Grid
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                                ForEach(recentItems.filter { $0.category == selectedFilter }) { item in
+                                    NavigationLink {
+                                        FurnitureTryOutView()
+                                    } label: {
+                                        FurnitureCard(item: item)
                                     }
+                                }
+                            }
+                            .padding()
+                        }
+                    }
+                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                        let delta = offset - lastScrollOffset
+                        if abs(delta) > 5 {
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                showHeader = delta > 0 || offset > -50 // reveal on scroll up or near top
                             }
                         }
-                        .padding()
+                        lastScrollOffset = offset
                     }
-                }
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                    let delta = offset - lastScrollOffset
-                    if abs(delta) > 5 {
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            showHeader = delta > 0 || offset > -50 // reveal on scroll up or near top
-                        }
-                    }
-                    lastScrollOffset = offset
                 }
             }
-        }
-        .sheet(isPresented: $showARPreview) {
-            FurnitureTryOutView()
         }
 
     }
