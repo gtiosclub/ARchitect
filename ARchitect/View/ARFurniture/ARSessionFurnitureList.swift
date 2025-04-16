@@ -13,7 +13,7 @@ protocol FurnitureGalleryDelegate: AnyObject {
 
 class FurnitureGalleryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     weak var delegate: FurnitureGalleryDelegate?
-    let furnitureModels = ["Grey Couch", "Arm chair", "Folding_Table", "fridge"] // Updated to include local furniture models
+    let furnitureModels = ["Curved Comfort Chair", "Arm chair", "Folding_Table", "fridge"] // Updated to include local furniture models
     var tableView: UITableView!
 
     override func viewDidLoad() {
