@@ -22,7 +22,7 @@ struct GeneralView: View {
                     if selectedTab == "Projects" {
                         ProjectsView(recentMode: $recentMode)
                     } else {
-                        FurnitureLibraryView(searchText: $searchText)
+                        FurnitureLibraryWrapperView(searchText: $searchText)
                     }
                     
     //                if !isKeyboardVisible {

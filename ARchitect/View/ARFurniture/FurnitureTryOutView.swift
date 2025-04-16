@@ -8,22 +8,36 @@ struct FurnitureState {
 }
 
 struct FurnitureTryOutView: View {
+    @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) private var dismiss
     @State private var state = FurnitureState()
     @State private var useWorldTracking = false
     @State private var initialized = false
-
+    
     @State private var dragRotation: Float = 0      // Total accumulated angle
     @GestureState private var dragDelta: Float = 0  // Current gesture offset
     
     @State private var arRotationAngle: Float = 0
     @GestureState private var currentRotation: Angle = .degrees(0)
-
+    
     var body: some View {
         ZStack {
             Color(hex: "#FFF2DF").ignoresSafeArea()
-
+            
             VStack {
+                HStack {
+                    Button(action: {
+                        dismiss() // ✅ This properly stops the view and session
+                    }) {
+                        Image(systemName: "chevron.backward")
+                            .padding()
+                            .background(Color.black.opacity(0.6))
+                            .clipShape(Circle())
+                            .foregroundColor(.white)
+                    }
+                    .padding(.leading)
+                    Spacer()
+                }
                 HStack {
                     HStack {
                         Text("Made by ").padding(.leading)
@@ -36,36 +50,37 @@ struct FurnitureTryOutView: View {
                         content.camera = .virtual
                         initialized = true
                     }
-
+                    
                     let anchor = AnchorEntity(world: SIMD3<Float>(0, -1.0, -1.5))
                     content.add(anchor)
-
+                    
                     let parentContainer = Entity()
                     let rotatingChild = Entity()
-
+                    
                     anchor.addChild(parentContainer)
                     parentContainer.addChild(rotatingChild)
-
+                    
                     state.parentContainer = parentContainer
                     state.rotatingChild = rotatingChild
-
-                    if let couch = try? await ModelEntity(named: "Arm chair") {
+                    
+                    if let couch = try? await ModelEntity(named: "Curved Comfort Chair") {
                         couch.name = "armChair"
+                        couch.setScale(SIMD3<Float>(1.5, 1.5, 1.5), relativeTo: couch)
                         couch.components.set(InputTargetComponent())
                         rotatingChild.addChild(couch)
                     }
-
+                    
                     let rotationSpeed: Float = .pi / 4.0
                     _ = content.subscribe(to: SceneEvents.Update.self) { event in
                         guard let rotating = state.rotatingChild else { return }
                         guard !useWorldTracking else { return }
-
+                        
                         let delta = Float(event.deltaTime)
                         let angle = delta * rotationSpeed
                         let rotIncrement = simd_quatf(angle: angle, axis: SIMD3<Float>(0, 1, 0))
                         rotating.transform.rotation *= rotIncrement
                     }
-
+                    
                     // Apply drag-based rotation to parent
                     if let parent = state.parentContainer {
                         let totalAngle = dragRotation + dragDelta
@@ -73,7 +88,7 @@ struct FurnitureTryOutView: View {
                         current.rotation = simd_quatf(angle: totalAngle, axis: [0, 1, 0])
                         parent.transform = current
                     }
-
+                    
                 } update: { content in
                     content.camera = useWorldTracking ? .spatialTracking : .virtual
                 }
@@ -90,11 +105,11 @@ struct FurnitureTryOutView: View {
                         }
                         .onChanged { value in
                             guard useWorldTracking, let parent = state.parentContainer else { return }
-
+                            
                             // AR mode — move object along horizontal plane
                             let x = Float(value.translation.width) * 0.0001
                             let z = Float(value.translation.height) * 0.0001
-
+                            
                             var current = parent.transform
                             current.translation += SIMD3<Float>(x, 0, z)
                             parent.transform = current
@@ -108,20 +123,20 @@ struct FurnitureTryOutView: View {
                             }
                         }
                 )
-
+                
                 .simultaneousGesture(
                     TapGesture(count: 2)
                         .onEnded {
                             guard let parent = state.parentContainer else { return }
                             state.isZoomed.toggle()
-
+                            
                             let targetScale = state.isZoomed ? SIMD3<Float>(2, 2, 2) : SIMD3<Float>(1, 1, 1)
                             let newTransform = Transform(
                                 scale: targetScale,
                                 rotation: parent.transform.rotation,
                                 translation: parent.transform.translation
                             )
-
+                            
                             parent.move(
                                 to: newTransform,
                                 relativeTo: parent.parent,
@@ -130,7 +145,7 @@ struct FurnitureTryOutView: View {
                             )
                         }
                 )
-
+                
                 Button(action: {
                     useWorldTracking.toggle()
                 }) {
@@ -146,7 +161,7 @@ struct FurnitureTryOutView: View {
                 }
             }
             .padding(.vertical)
-            .navigationTitle("Arm Chair Preview")
+            .navigationTitle("Curved Comfort Chair Preview")
             .animation(.easeInOut, value: useWorldTracking)
         }
     }

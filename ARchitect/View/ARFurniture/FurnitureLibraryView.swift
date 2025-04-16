@@ -12,6 +12,28 @@ extension Color {
     }
 }
 
+struct FurnitureLibraryWrapperView: View {
+    @State private var refreshID = UUID()
+    @Binding var searchText: String
+
+    var body: some View {
+        ZStack {
+            
+            Color(hex: "#FFF2DF").ignoresSafeArea()
+                
+            FurnitureLibraryView(searchText: $searchText)
+                .id(refreshID) // 🔁 Triggers reinitialization
+//            Button {
+//                refreshID = UUID() // Changing this causes the view to reset
+//                print("reset furniture library")
+//            } label: {
+//                Image(systemName: "arrow.clockwise")
+//            }
+//            .padding()
+        }
+    }
+}
+
 struct FurnitureLibraryView: View {
     @Binding var searchText: String //search string
     
@@ -95,8 +117,8 @@ struct FurnitureLibraryView: View {
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 30) {
                                             ForEach(recentItems.prefix(3)) { item in
-                                                NavigationLink {
-                                                    FurnitureTryOutView()
+                                                Button {
+                                                    showARPreview = true
                                                 } label: {
                                                     FurnitureCard(item: item)
                                                 }
@@ -135,8 +157,8 @@ struct FurnitureLibraryView: View {
                             // 🟤 Main Grid
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                                 ForEach(recentItems.filter { $0.category == selectedFilter }) { item in
-                                    NavigationLink {
-                                        FurnitureTryOutView()
+                                    Button {
+                                        showARPreview = true
                                     } label: {
                                         FurnitureCard(item: item)
                                     }
@@ -145,6 +167,9 @@ struct FurnitureLibraryView: View {
                             .padding()
                         }
                     }
+                    .fullScreenCover(isPresented: $showARPreview, content: {
+                        FurnitureTryOutView()
+                    })
                     .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
                         let delta = offset - lastScrollOffset
                         if abs(delta) > 5 {
